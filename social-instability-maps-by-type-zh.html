@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>按问题类型划分的社会不稳定地图</title>
+<style>
+  :root{
+    --ink:#1c1a17;
+    --paper:#faf7f2;
+    --line:#d8d2c6;
+    --red:#b3261e;
+    --red-bg:#f8e4e2;
+    --orange:#a9631a;
+    --orange-bg:#f6e9d6;
+    --yellow:#8a7215;
+    --yellow-bg:#f5f0d8;
+    --muted:#6b675f;
+    --tab-bg:#eee8db;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family: Georgia, 'Iowan Old Style', serif;
+    line-height:1.5;
+    padding:2.5rem 1.5rem 4rem;
+  }
+  .wrap{max-width:960px;margin:0 auto;}
+  h1{font-size:1.9rem;margin:0 0 0.3rem;font-weight:600;}
+  .sub{color:var(--muted);font-size:1rem;max-width:70ch;margin:0 0 1.6rem;}
+
+  .tabs{
+    display:flex;
+    flex-wrap:wrap;
+    gap:0.4rem;
+    border-bottom:2px solid var(--line);
+    margin-bottom:1.6rem;
+  }
+  .tab-btn{
+    font-family:inherit;
+    font-size:0.92rem;
+    padding:0.55rem 1rem;
+    background:var(--tab-bg);
+    border:1px solid var(--line);
+    border-bottom:none;
+    border-radius:5px 5px 0 0;
+    cursor:pointer;
+    color:var(--ink);
+    margin-bottom:-2px;
+  }
+  .tab-btn.active{
+    background:var(--paper);
+    border-bottom:2px solid var(--paper);
+    font-weight:700;
+  }
+  .panel{display:none;}
+  .panel.active{display:block;}
+
+  .methodology{
+    border:1px solid var(--line);
+    background:#fff;
+    border-radius:4px;
+    padding:0.9rem 1.1rem;
+    font-size:0.88rem;
+    color:#3a3730;
+    margin-bottom:1.4rem;
+  }
+  .methodology p{margin:0.35rem 0;}
+  .legend{
+    display:flex;
+    gap:1.3rem;
+    flex-wrap:wrap;
+    margin:0 0 1.4rem;
+    font-size:0.88rem;
+  }
+  .legend span{display:inline-flex;align-items:center;gap:0.45rem;}
+  .dot{width:11px;height:11px;border-radius:50%;display:inline-block;}
+  .dot.red{background:var(--red);}
+  .dot.orange{background:var(--orange);}
+  .dot.yellow{background:var(--yellow);}
+
+  .grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill,minmax(250px,1fr));
+    gap:0.65rem;
+  }
+  .card{border-radius:4px;padding:0.7rem 0.85rem;border:1px solid transparent;}
+  .card.red{background:var(--red-bg); border-color:#e3b7b2;}
+  .card.orange{background:var(--orange-bg); border-color:#e0c193;}
+  .card.yellow{background:var(--yellow-bg); border-color:#dcd08f;}
+  .card .name{font-weight:700;font-size:0.98rem;display:flex;justify-content:space-between;align-items:baseline;}
+  .card .level{font-size:0.7rem;text-transform:uppercase;letter-spacing:0.03em;font-weight:600;}
+  .card.red .level{color:var(--red);}
+  .card.orange .level{color:var(--orange);}
+  .card.yellow .level{color:var(--yellow);}
+  .card .drivers{font-size:0.84rem;color:#4a473f;margin-top:0.2rem;}
+  .card .drivers:has(strong){background:rgba(0,0,0,0.035);border-radius:3px;padding:0.4rem 0.5rem;margin-top:0.4rem;}
+  .card .source{font-size:0.74rem;color:var(--muted);margin-top:0.3rem;font-style:italic;}
+  .card .source a{color:var(--muted);text-decoration:underline;font-style:italic;}
+  .card .source a:hover{color:var(--accent, #a9631a);}
+
+  .foot{margin-top:2rem;padding-top:1rem;border-top:1px solid var(--line);font-size:0.84rem;color:var(--muted);}
+  .foot p{margin:0.4rem 0;}
+</style>
+</head>
+<body>
+<div class="nav" style="background:#2b2a26; color:#e8e3d8; padding:0.9rem 1.5rem; display:flex; flex-wrap:wrap; gap:0.3rem 1rem; font-family:Georgia,serif; font-size:0.88rem;">
+  <a class="home" style="color:#e8e3d8; text-decoration:none; font-weight:700;" href="index-zh.html">首页</a>
+  <a style="color:#e8e3d8; text-decoration:none; opacity:0.85;" href="sociology-websites-directory-zh.html">社会学网站目录</a>
+  <a style="color:#e8e3d8; text-decoration:none; opacity:0.85;" href="social-problems-current-events-links-zh.html">时事动态</a>
+  <a style="color:#e8e3d8; text-decoration:none; opacity:0.85;" href="social-instability-maps-links-zh.html">地图链接</a>
+  <a style="color:#e8e3d8; text-decoration:none; opacity:0.85;" href="social-instability-heat-map-zh.html">热力图</a>
+  <a style="color:#e8e3d8; text-decoration:none; opacity:0.85;" href="social-instability-maps-by-type-zh.html">分类地图</a>
+  <a style="color:#e8e3d8; text-decoration:none; opacity:0.85;" href="key-contributors-social-problems-zh.html">贡献者</a>
+  <a style="color:#e8e3d8; text-decoration:none; opacity:0.85;" href="theoretical-sociologists-philosophers-zh.html">理论家</a>
+  <a style="color:#e8e3d8; text-decoration:none; opacity:0.85;" href="sociology-sponsors-power-control-zh.html">权力与赞助者</a>
+  <a style="color:#e8e3d8; text-decoration:none; opacity:0.85;" href="selected-works-by-contributor-zh.html">著作</a>
+  <a style="color:#e8e3d8; text-decoration:none; opacity:0.85;" href="LICENSE-zh.html">许可</a>
+</div>
+<div class="wrap">
+
+  <h1>社会不稳定地图,按问题类型划分</h1>
+  <p class="sub">十二张独立的地图——每个维度一张——而非单一的综合评分,因为一个国家可能在某一轴线上(例如有组织犯罪)排名严重靠前,而在另一轴线上(例如饥荒风险)却并不突出。每个标签页均采用该维度自身、已发布的衡量标准及各自的颜色阈值。</p>
+
+  <p class="why-maps">绘制社会世界的地图,能够做到表格数字无法做到的事情:揭示空间关系——聚集、跨境传染与邻近性——这些关系塑造社会问题的程度,不亚于单一国家自身的统计数据。饥荒或冲突很少局限于一国边界之内;它会沿着相邻领土、贸易路线或某个流域蔓延开来,而地图能够以一种有序列表永远无法做到的方式,将这种邻接关系呈现出来。地理因素本身也具有解释性的分量:海岸线、诸如霍尔木兹海峡这样的咽喉要道、庇护叛乱活动的山脉,或是某个区域劳动力市场的吸引力,都有助于解释不稳定<em>为何</em>集中在其所在之处,而不仅仅是<em>是否</em>如此。而由于此处所绘制的大多数危机都是复合性的——一个陷入冲突的国家往往同时也面临饥荒、疾病与流离失所——将这些危机在地理上叠加呈现,而非埋没在各自独立的表格之中,正是使这种叠加效应变得可见的关键。这正是将每个维度视为其自身独立地图、而非单一综合评分的工作假设:一个问题的地理分布往往和其严重程度一样具有信息价值。</p>
+
+  <div class="freshness">
+    <p class="freshness-title">数据截至2026年9月——这是一张静态快照,而非实时数据来源</p>
+    <p class="sources-note">本页面将定期更新。所链接的页面——包括每张地图方法论说明框顶部的"实时数据看板"链接——各自都有其自身的更新流程,请手动查阅这些页面以获取最新状态。</p>
+    <table class="cadence-table">
+      <tr><th>地图</th><th>原生更新节奏</th></tr>
+      <tr><td>武装冲突/战争</td><td>ACLED:近乎每日 · 脆弱国家指数:每年</td></tr>
+      <tr><td>饥荒/粮食不安全</td><td>FEWS NET / IPC:每月 · 饥荒热点:每年约2次</td></tr>
+      <tr><td>经济不平等</td><td>基尼数据:不定期,取决于各国家庭调查(往往有1-3年的滞后)</td></tr>
+      <tr><td>犯罪暴力/有组织犯罪</td><td>全球有组织犯罪指数:约每2年一次</td></tr>
+      <tr><td>疾病/疫情暴发</td><td>世卫组织霍乱数据:每月 · PHEIC状态:视宣布情况而定</td></tr>
+      <tr><td>腐败</td><td>透明国际清廉指数:每年</td></tr>
+      <tr><td>毒品生产/贩运</td><td>联合国毒品和犯罪问题办公室世界毒品报告:每年</td></tr>
+      <tr><td>针对妇女的暴力</td><td>联合国妇女署女性杀害报告:每年 · 柳叶刀亲密伴侣暴力患病率研究:不定期,数年一次</td></tr>
+      <tr><td>针对少数群体的暴力</td><td>欧盟基本权利局罗姆人调查:约每3年一次 · Global Witness:每年</td></tr>
+      <tr><td>记者的报道自由</td><td>保护记者委员会所记录的杀害事件:持续更新 · 保护记者委员会监狱人口普查:每年</td></tr>
+      <tr><td>经济移民</td><td>国际移民组织世界移民报告:每2年一次 · 各国统计局:每年</td></tr>
+      <tr><td>宗教自由/迫害</td><td>敞开的门世界守望名单:每年 · 美国国际宗教自由委员会年度报告:每年</td></tr>
+    </table>
+  </div>
+
+  <div class="tabs">
+    <button class="tab-btn active" data-tab="conflict">武装冲突/战争</button>
+    <button class="tab-btn" data-tab="famine">饥荒/粮食不安全</button>
+    <button class="tab-btn" data-tab="inequality">经济不平等</button>
+    <button class="tab-btn" data-tab="crime">犯罪暴力/有组织犯罪</button>
+    <button class="tab-btn" data-tab="disease">疾病/疫情暴发</button>
+    <button class="tab-btn" data-tab="corruption">腐败</button>
+    <button class="tab-btn" data-tab="drugs">毒品生产/贩运</button>
+    <button class="tab-btn" data-tab="vaw">针对妇女的暴力</button>
+    <button class="tab-btn" data-tab="minorities">针对少数群体的暴力</button>
+    <button class="tab-btn" data-tab="press">记者的报道自由</button>
+    <button class="tab-btn" data-tab="econmig">经济移民</button>
+    <button class="tab-btn" data-tab="religion">宗教自由/迫害</button>
+  </div>
+
+  <!-- CONFLICT -->
+  <div class="panel active" id="conflict">
+    <div class="methodology">
+      <p><a class="live-link" href="https://acleddata.com/" target="_blank" rel="noopener">📡 实时数据看板/当前数据</a><br><strong>指标:</strong>活跃武装冲突的状态与脆弱性评分,取自2024/25年脆弱国家指数(和平基金会)中的安全机构组成部分,以及ACLED对冲突的持续监测/冲突观察名单。</p>
+      <p><strong>红色</strong>=正在进行的大规模战争或活跃内战。<strong>橙色</strong>=活跃的叛乱活动、民兵冲突,或高风险的冲突后脆弱性。<strong>黄色</strong>=政治暴力风险升高,但目前没有正在进行的大规模战争。</p>
+    </div>
+    <div class="legend">
+      <span><span class="dot red"></span>活跃的大规模战争</span>
+      <span><span class="dot orange"></span>活跃的叛乱/民兵冲突</span>
+      <span><span class="dot yellow"></span>风险升高,目前无战争</span>
+    </div>
+    <div class="grid">
+      <div class="card red"><div class="name">苏丹 <span class="level">红色</span></div><div class="drivers">苏丹武装部队对阵快速支援部队的内战,自2023年持续至今;达尔富尔的非阿拉伯裔社区遭受暴行,全球保护责任中心表示这些暴行可能构成种族灭绝。</div><div class="drivers"><strong>官方立场:</strong>快速支援部队否认实施种族灭绝或系统性针对非阿拉伯裔群体,将这场冲突定性为与苏丹武装部队之间的权力斗争。<strong>提出异议方:</strong>全球保护责任中心、显示万人坑的卫星图像分析,以及苏丹达尔富尔倡导团体所记录的逐户屠杀行为。</div><div class="source"><a href="https://acleddata.com/" target="_blank" rel="noopener">ACLED</a>、<a href="https://fragilestatesindex.org/analytics/fsi-heat-map/" target="_blank" rel="noopener">2024/25年脆弱国家指数</a>、<a href="https://www.globalr2p.org/" target="_blank" rel="noopener">全球保护责任中心</a> 2026年7月</div></div>
+      <div class="card red"><div class="name">乌克兰 <span class="level">红色</span></div><div class="drivers">与俄罗斯的大规模战争,自2022年持续至今。</div><div class="drivers"><strong>官方立场:</strong>俄罗斯将这场入侵称为一场"特别军事行动",理由是北约的扩张,以及旨在保护乌克兰境内俄语人口的主张。<strong>提出异议方:</strong>乌克兰、大多数联合国会员国以及国际刑事法院(已对俄罗斯总统发出逮捕令),他们将此定性为一场无端发动的侵略战争。</div><div class="source"><a href="https://acleddata.com/" target="_blank" rel="noopener">ACLED</a>、<a href="https://www.cfr.org/global-conflict-tracker" target="_blank" rel="noopener">外交关系委员会全球冲突追踪器</a></div></div>
+      <div class="card red"><div class="name">缅甸 <span class="level">红色</span></div><div class="drivers">自2021年政变以来持续的多战线内战。</div><div class="source"><a href="https://acleddata.com/" target="_blank" rel="noopener">ACLED</a>、<a href="https://fragilestatesindex.org/analytics/fsi-heat-map/" target="_blank" rel="noopener">2024/25年脆弱国家指数</a></div></div>
+      <div class="card red"><div class="name">加沙/巴勒斯坦 <span class="level">红色</span></div><div class="drivers">活跃的战争以及由封锁所衍生的危机。</div><div class="drivers"><strong>官方立场:</strong>以色列表示其军事行动的目标是哈马斯,是在2023年10月7日袭击事件后进行的自卫行动,并对将这场战争定性为不成比例或蓄意针对平民的说法提出异议。<strong>提出异议方:</strong>国际法院(在一项临时裁决中认定存在种族灭绝的合理风险)、国际刑事法院(已发出逮捕令),以及援引本页面其他部分所记录的平民死亡人数和人道主义状况的人权组织。</div><div class="source"><a href="https://www.cfr.org/global-conflict-tracker" target="_blank" rel="noopener">外交关系委员会全球冲突追踪器</a></div></div>
+      <div class="card red"><div class="name">也门 <span class="level">红色</span></div><div class="drivers">旷日持久的内战,脆弱的停火态势。</div><div class="source"><a href="https://fragilestatesindex.org/analytics/fsi-heat-map/" target="_blank" rel="noopener">2024/25年脆弱国家指数</a>、<a href="https://acleddata.com/" target="_blank" rel="noopener">ACLED</a></div></div>
+      <div class="card red"><div class="name">刚果民主共和国 <span class="level">红色</span></div><div class="drivers">东部地区M23武装力量发起攻势,导致大规模流离失所。</div><div class="source"><a href="https://acleddata.com/" target="_blank" rel="noopener">ACLED</a>、<a href="https://fragilestatesindex.org/analytics/fsi-heat-map/" target="_blank" rel="noopener">2024/25年脆弱国家指数</a></div></div>
+      <div class="card orange"><div class="name">马里、尼日尔与布基纳法索 <span class="level">橙色</span></div><div class="drivers">萨赫勒圣战主义叛乱地带。</div><div class="source"><a href="https://acleddata.com/series/conflict-watchlist-2026" target="_blank" rel="noopener">ACLED 冲突观察名单</a></div></div>
+      <div class="card orange"><div class="name">尼日利亚(东北部) <span class="level">橙色</span></div><div class="drivers">博科圣地/伊斯兰国西非省的叛乱活动。</div><div class="source"><a href="https://acleddata.com/" target="_blank" rel="noopener">ACLED</a></div></div>
+      <div class="card orange"><div class="name">叙利亚 <span class="level">橙色</span></div><div class="drivers">过渡期后的不稳定局势,局部性冲突(2025-26年)。</div><div class="source"><a href="https://acleddata.com/" target="_blank" rel="noopener">ACLED 区域监测</a></div></div>
+      <div class="card orange"><div class="name">中非共和国 <span class="level">橙色</span></div><div class="drivers">武装团体分裂控制的局面持续存在。</div><div class="source"><a href="https://fragilestatesindex.org/analytics/fsi-heat-map/" target="_blank" rel="noopener">2024/25年脆弱国家指数</a></div></div>
+      <div class="card orange"><div class="name">索马里 <span class="level">橙色</span></div><div class="drivers">青年党叛乱持续进行中。</div><div class="source"><a href="https://acleddata.com/" target="_blank" rel="noopener">ACLED</a>、<a href="https://fragilestatesindex.org/analytics/fsi-heat-map/" target="_blank" rel="noopener">2024/25年脆弱国家指数</a></div></div>
+      <div class="card yellow"><div class="name">伊朗 <span class="level">黄色</span></div><div class="drivers">卷入/升级至2026年区域战争的风险。</div><div class="source"><a href="https://acleddata.com/" target="_blank" rel="noopener">ACLED 区域监测</a></div></div>
+      <div class="card yellow"><div class="name">巴基斯坦 <span class="level">黄色</span></div><div class="drivers">周期性的武装分子袭击,与阿富汗的边境局势紧张。</div><div class="source"><a href="https://fragilestatesindex.org/analytics/fsi-heat-map/" target="_blank" rel="noopener">2024/25年脆弱国家指数</a></div></div>
+      <div class="card yellow"><div class="name">哥伦比亚 <span class="level">黄色</span></div><div class="drivers">和平进程之后武装团体的残余活动。</div><div class="source"><a href="https://acleddata.com/" target="_blank" rel="noopener">ACLED 区域监测</a></div></div>
+    </div>
+  </div>
+
+  <!-- FAMINE -->
+  <div class="panel" id="famine">
+    <div class="methodology">
+      <p><a class="live-link" href="https://fews.net/" target="_blank" rel="noopener">📡 实时数据看板/当前数据</a><br><strong>指标:</strong>粮食安全阶段综合分类(IPC),这是FEWS NET及粮农组织/世界粮食计划署饥荒热点报告所采用的技术标准。</p>
+      <p><strong>红色</strong>=已确认饥荒或灾难(IPC第5阶段)存在。<strong>橙色</strong>=紧急状态(IPC第4阶段)/饥荒热点中的"最高关注"分类。<strong>黄色</strong>="极高关注"等级——情况严重,但比大范围紧急状态低一个级别。</p>
+    </div>
+    <div class="legend">
+      <span><span class="dot red"></span>饥荒/灾难(IPC 5)</span>
+      <span><span class="dot orange"></span>紧急状态(IPC 4)——最高关注</span>
+      <span><span class="dot yellow"></span>极高关注</span>
+    </div>
+    <div class="grid">
+      <div class="card red"><div class="name">苏丹 <span class="level">红色</span></div><div class="drivers">在法希尔和卡杜格利确认发生饥荒(2025年);截至2026年约有13.5万人处于灾难状态。</div><div class="source">2025年9月IPC饥荒复审,2026年2月FEWS NET</div></div>
+      <div class="card red"><div class="name">加沙/巴勒斯坦 <span class="level">红色</span></div><div class="drivers">2025年确认发生饥荒;进入2026年后状况仍"高度脆弱"。</div><div class="source">IPC 饥荒事实</div></div>
+      <div class="card orange"><div class="name">南苏丹 <span class="level">橙色</span></div><div class="drivers">57%的人口处于严重粮食不安全状态;上尼罗地区存在饥荒风险。</div><div class="source">2026年饥荒热点,2026年全球粮食危机报告</div></div>
+      <div class="card orange"><div class="name">也门 <span class="level">橙色</span></div><div class="drivers">52%的人口处于严重粮食不安全状态;属于最高关注等级。</div><div class="source">2026年饥荒热点</div></div>
+      <div class="card orange"><div class="name">尼日利亚 <span class="level">橙色</span></div><div class="drivers">在2026年饥荒热点中属于最高关注等级。</div><div class="source">2026年饥荒热点</div></div>
+      <div class="card orange"><div class="name">索马里 <span class="level">橙色</span></div><div class="drivers">最高关注等级;反复出现的干旱与冲突相互加剧。</div><div class="source">2026年饥荒热点</div></div>
+      <div class="card yellow"><div class="name">阿富汗 <span class="level">黄色</span></div><div class="drivers">"极高关注"等级。</div><div class="source">2026年饥荒热点</div></div>
+      <div class="card yellow"><div class="name">刚果民主共和国 <span class="level">黄色</span></div><div class="drivers">在东部冲突背景下处于"极高关注"等级。</div><div class="source">2026年饥荒热点</div></div>
+      <div class="card yellow"><div class="name">海地 <span class="level">黄色</span></div><div class="drivers">"极高关注"等级;帮派控制干扰粮食获取渠道。</div><div class="source">2026年饥荒热点</div></div>
+    </div>
+  </div>
+
+  <!-- INEQUALITY -->
+  <div class="panel" id="inequality">
+    <div class="methodology">
+      <p><a class="live-link" href="https://wid.world/world/" target="_blank" rel="noopener">📡 实时数据看板/当前数据</a><br><strong>指标:</strong>世界银行基尼指数(收入),取各国最新可获取的调查年份数据。世界银行自身将基尼系数&gt;40标注为其"高度不平等"的阈值。</p>
+      <p><strong>红色</strong>=基尼系数≥50(极端收入集中)。<strong>橙色</strong>=基尼系数45–49.9(高度不平等)。<strong>黄色</strong>=基尼系数40–44.9(高于世界银行的高度不平等阈值)。</p>
+    </div>
+    <div class="legend">
+      <span><span class="dot red"></span>基尼系数≥50</span>
+      <span><span class="dot orange"></span>基尼系数45–49.9</span>
+      <span><span class="dot yellow"></span>基尼系数40–44.9</span>
+    </div>
+    <div class="grid">
+      <div class="card red"><div class="name">南非 <span class="level">红色</span></div><div class="drivers">基尼系数约54-63,视调查/年份而异——持续位居全球最高水平。</div><div class="source">世界银行,瑞银全球财富报告</div></div>
+      <div class="card red"><div class="name">哥伦比亚 <span class="level">红色</span></div><div class="drivers">基尼系数约54.4(2024年)——拉丁美洲最高。</div><div class="source">世界银行</div></div>
+      <div class="card red"><div class="name">纳米比亚与斯威士兰 <span class="level">红色</span></div><div class="drivers">基尼系数介于50至60之间,处于中高区间。</div><div class="source">世界银行</div></div>
+      <div class="card red"><div class="name">赞比亚 <span class="level">红色</span></div><div class="drivers">基尼系数约51.5。</div><div class="source">世界银行</div></div>
+      <div class="card red"><div class="name">巴西 <span class="level">红色</span></div><div class="drivers">基尼系数约50.3-52。</div><div class="source">世界银行</div></div>
+      <div class="card orange"><div class="name">巴拿马 <span class="level">橙色</span></div><div class="drivers">基尼系数约49.7。</div><div class="source">世界银行</div></div>
+      <div class="card orange"><div class="name">莫桑比克 <span class="level">橙色</span></div><div class="drivers">基尼系数约49.6。</div><div class="source">世界银行</div></div>
+      <div class="card orange"><div class="name">厄瓜多尔 <span class="level">橙色</span></div><div class="drivers">基尼系数约45.9。</div><div class="source">世界银行</div></div>
+      <div class="card orange"><div class="name">洪都拉斯 <span class="level">橙色</span></div><div class="drivers">基尼系数约45.7。</div><div class="source">世界银行</div></div>
+      <div class="card orange"><div class="name">哥斯达黎加与危地马拉 <span class="level">橙色</span></div><div class="drivers">基尼系数约45.2-45.5。</div><div class="source">世界银行</div></div>
+      <div class="card yellow"><div class="name">土耳其 <span class="level">黄色</span></div><div class="drivers">基尼系数约43.7。</div><div class="source">世界银行</div></div>
+      <div class="card yellow"><div class="name">智利 <span class="level">黄色</span></div><div class="drivers">基尼系数约43.0。</div><div class="source">世界银行</div></div>
+      <div class="card yellow"><div class="name">墨西哥 <span class="level">黄色</span></div><div class="drivers">基尼系数约42.6。</div><div class="source">世界银行</div></div>
+      <div class="card yellow"><div class="name">美国 <span class="level">黄色</span></div><div class="drivers">基尼系数约41.8,是七国集团经济体中最高的。</div><div class="source">世界银行</div></div>
+    </div>
+  </div>
+
+  <!-- CRIME -->
+  <div class="panel" id="crime">
+    <div class="methodology">
+      <p><a class="live-link" href="https://ocindex.net/" target="_blank" rel="noopener">📡 实时数据看板/当前数据</a><br><strong>指标:</strong>全球有组织犯罪指数(全球打击跨国有组织犯罪倡议组织),犯罪程度评分从0到10,最新版本(2023年)。</p>
+      <p><strong>红色</strong>=犯罪程度评分≥7.5(全球最高的集中程度)。<strong>橙色</strong>=6.5–7.49。<strong>黄色</strong>=6.0–6.49——数值偏高,但未进入全球最高层级。</p>
+    </div>
+    <div class="legend">
+      <span><span class="dot red"></span>犯罪程度评分≥7.5</span>
+      <span><span class="dot orange"></span>6.5–7.49</span>
+      <span><span class="dot yellow"></span>6.0–6.49</span>
+    </div>
+    <div class="grid">
+      <div class="card red"><div class="name">缅甸 <span class="level">红色</span></div><div class="drivers">评分8.15——全球最高;贩运、军火、诈骗园区经济。</div><div class="source">2023年全球有组织犯罪指数</div></div>
+      <div class="card red"><div class="name">哥伦比亚 <span class="level">红色</span></div><div class="drivers">评分7.75;毒品贩运的核心地带。</div><div class="source">2023年全球有组织犯罪指数</div></div>
+      <div class="card red"><div class="name">墨西哥 <span class="level">红色</span></div><div class="drivers">评分约7.7;由贩毒集团驱动的暴力。</div><div class="source">2023年全球有组织犯罪指数</div></div>
+      <div class="card orange"><div class="name">巴拉圭 <span class="level">橙色</span></div><div class="drivers">区域性贩运枢纽。</div><div class="source">2023年全球有组织犯罪指数</div></div>
+      <div class="card orange"><div class="name">厄瓜多尔 <span class="level">橙色</span></div><div class="drivers">近期有组织犯罪暴力大幅上升。</div><div class="source">2023年全球有组织犯罪指数</div></div>
+      <div class="card orange"><div class="name">刚果民主共和国 <span class="level">橙色</span></div><div class="drivers">与冲突相关的资源贩运。</div><div class="source">2023年全球有组织犯罪指数</div></div>
+      <div class="card orange"><div class="name">南非 <span class="level">橙色</span></div><div class="drivers">在犯罪程度以及(单独计算的)不平等程度上均评分较高。</div><div class="source">2023年全球有组织犯罪指数</div></div>
+      <div class="card orange"><div class="name">尼日利亚 <span class="level">橙色</span></div><div class="drivers">贩运与网络犯罪网络。</div><div class="source">2023年全球有组织犯罪指数</div></div>
+      <div class="card yellow"><div class="name">黎巴嫩 <span class="level">黄色</span></div><div class="drivers">国家崩溃背景下的走私经济。</div><div class="source">2023年全球有组织犯罪指数</div></div>
+      <div class="card yellow"><div class="name">土耳其 <span class="level">黄色</span></div><div class="drivers">贩运路线的中转枢纽。</div><div class="source">2023年全球有组织犯罪指数</div></div>
+      <div class="card yellow"><div class="name">洪都拉斯与萨尔瓦多 <span class="level">黄色</span></div><div class="drivers">历史上帮派暴力程度较高;萨尔瓦多的评分在紧急状态政策实施后有所变化。</div><div class="source">2023年全球有组织犯罪指数</div></div>
+    </div>
+  </div>
+
+  <!-- DISEASE -->
+  <div class="panel" id="disease">
+    <div class="methodology">
+      <p><a class="live-link" href="https://www.who.int/emergencies/disease-outbreak-news" target="_blank" rel="noopener">📡 实时数据看板/当前数据</a><br><strong>指标:</strong>世卫组织/欧洲疾病预防控制中心报告的活跃疫情状态——国际关注的突发公共卫生事件(PHEIC)宣布情况、世卫组织多国霍乱流行病学更新,以及截至2026年年中的疫情病例数/死亡人数统计。</p>
+      <p><strong>红色</strong>=被宣布为PHEIC的疫情,或依据世卫组织标准处于"极高"/病例数峰值的疫情状态。<strong>橙色</strong>=在世卫组织的月度更新中被报告的大规模、持续性的活跃疫情。<strong>黄色</strong>=存在并已被报告的疫情,但规模较小或已得到更好控制。</p>
+    </div>
+    <div class="legend">
+      <span><span class="dot red"></span>PHEIC或处于最高严重程度的活跃疫情</span>
+      <span><span class="dot orange"></span>大规模且持续的活跃疫情</span>
+      <span><span class="dot yellow"></span>活跃疫情,规模较小/已获控制</span>
+    </div>
+    <div class="grid">
+      <div class="card red"><div class="name">刚果民主共和国 <span class="level">红色</span></div><div class="drivers">2026年埃博拉疫情被宣布为PHEIC(2026年5月);同时也是全球霍乱死亡人数最高的国家之一(2026年近700人死亡)。</div><div class="source">世卫组织PHEIC宣布,世卫组织霍乱更新(2026年8月)</div></div>
+      <div class="card red"><div class="name">尼日利亚 <span class="level">红色</span></div><div class="drivers">按病例数计算,是最大的活跃霍乱疫情(2026年病例超过5万例,死亡超过338人),集中在博尔诺州。</div><div class="source">世卫组织/联合国儿童基金会霍乱更新,2026年8月</div></div>
+      <div class="card red"><div class="name">苏丹 <span class="level">红色</span></div><div class="drivers">霍乱疫情叠加于战争与饥荒之上;约80%的医疗设施无法运作。</div><div class="source">世卫组织霍乱情况报告,2025-26年</div></div>
+      <div class="card orange"><div class="name">也门 <span class="level">橙色</span></div><div class="drivers">在卫生基础设施崩溃的背景下反复出现大规模霍乱疫情。</div><div class="source">世卫组织霍乱更新,2025-26年</div></div>
+      <div class="card orange"><div class="name">阿富汗 <span class="level">橙色</span></div><div class="drivers">在东地中海区域中霍乱/急性水样腹泻病例数居于最高之列。</div><div class="source">世卫组织霍乱更新,2026年6月</div></div>
+      <div class="card orange"><div class="name">南苏丹 <span class="level">橙色</span></div><div class="drivers">2025-26年间霍乱病例数高企且持续存在。</div><div class="source">世卫组织霍乱更新,2025-26年</div></div>
+      <div class="card orange"><div class="name">乍得、喀麦隆与中非共和国 <span class="level">橙色</span></div><div class="drivers">乍得湖流域跨境霍乱走廊;儿童受到的影响尤为严重。</div><div class="source">联合国儿童基金会/世卫组织,2026年8月</div></div>
+      <div class="card yellow"><div class="name">安哥拉、莫桑比克与索马里 <span class="level">黄色</span></div><div class="drivers">2026年间报告的活跃但规模较小的霍乱疫情。</div><div class="source">世卫组织/欧洲疾病预防控制中心月度霍乱更新</div></div>
+      <div class="card yellow"><div class="name">缅甸与巴基斯坦 <span class="level">黄色</span></div><div class="drivers">反复出现的霍乱病例,但报告病例数较少。</div><div class="source">世卫组织/欧洲疾病预防控制中心月度霍乱更新</div></div>
+      <div class="card yellow"><div class="name">乌干达 <span class="level">黄色</span></div><div class="drivers">与2026年刚果民主共和国疫情相关的继发性埃博拉病例。</div><div class="source">世卫组织PHEIC情况报告</div></div>
+    </div>
+  </div>
+
+  <!-- CORRUPTION -->
+  <div class="panel" id="corruption">
+    <div class="methodology">
+      <p><a class="live-link" href="https://www.transparency.org/en/cpi/2025" target="_blank" rel="noopener">📡 实时数据看板/当前数据</a><br><strong>指标:</strong>透明国际2025年清廉指数(CPI),范围从0(高度腐败)到100(非常清廉),涵盖182个受评估国家。全球平均分在2025年降至42分,创下新低。</p>
+      <p><strong>红色</strong>=清廉指数评分≤20(被认为是全球最腐败的等级)。<strong>橙色</strong>=清廉指数21-30。<strong>黄色</strong>=清廉指数31-40——低于"严重腐败问题"的50分阈值,但未处于最差层级。</p>
+    </div>
+    <div class="legend">
+      <span><span class="dot red"></span>清廉指数≤20</span>
+      <span><span class="dot orange"></span>清廉指数21–30</span>
+      <span><span class="dot yellow"></span>清廉指数31–40</span>
+    </div>
+    <div class="grid">
+      <div class="card red"><div class="name">索马里与南苏丹 <span class="level">红色</span></div><div class="drivers">清廉指数均为9分——并列全球最低。</div><div class="source">透明国际2025年清廉指数</div></div>
+      <div class="card red"><div class="name">委内瑞拉 <span class="level">红色</span></div><div class="drivers">清廉指数10分。</div><div class="source">透明国际2025年清廉指数</div></div>
+      <div class="card red"><div class="name">也门、利比亚与厄立特里亚 <span class="level">红色</span></div><div class="drivers">各为清廉指数13分。</div><div class="source">透明国际2025年清廉指数</div></div>
+      <div class="card red"><div class="name">苏丹与尼加拉瓜 <span class="level">红色</span></div><div class="drivers">各为清廉指数14分。</div><div class="source">透明国际2025年清廉指数</div></div>
+      <div class="card red"><div class="name">叙利亚与赤道几内亚 <span class="level">红色</span></div><div class="drivers">各为清廉指数15分。</div><div class="source">透明国际2025年清廉指数</div></div>
+      <div class="card red"><div class="name">海地与朝鲜 <span class="level">红色</span></div><div class="drivers">分别为清廉指数16分和15分。</div><div class="source">透明国际2025年清廉指数</div></div>
+      <div class="card orange"><div class="name">乍得与洪都拉斯 <span class="level">橙色</span></div><div class="drivers">各为清廉指数22分。</div><div class="source">透明国际2025年清廉指数</div></div>
+      <div class="card orange"><div class="name">刚果共和国与斯威士兰 <span class="level">橙色</span></div><div class="drivers">各为清廉指数23分。</div><div class="source">透明国际2025年清廉指数</div></div>
+      <div class="card orange"><div class="name">伊朗与黎巴嫩 <span class="level">橙色</span></div><div class="drivers">各为清廉指数23分。</div><div class="source">透明国际2025年清廉指数</div></div>
+      <div class="card orange"><div class="name">巴拉圭 <span class="level">橙色</span></div><div class="drivers">清廉指数24分。</div><div class="source">透明国际2025年清廉指数</div></div>
+      <div class="card orange"><div class="name">俄罗斯与白俄罗斯 <span class="level">橙色</span></div><div class="drivers">分别为清廉指数22分和31分。</div><div class="source">透明国际2025年清廉指数</div></div>
+      <div class="card yellow"><div class="name">伊拉克、玻利维亚与利比里亚 <span class="level">黄色</span></div><div class="drivers">各为清廉指数28分——刚好处于"橙色"区间之外,但持续处于较弱状态。</div><div class="source">透明国际2025年清廉指数</div></div>
+      <div class="card yellow"><div class="name">墨西哥与危地马拉 <span class="level">黄色</span></div><div class="drivers">分别为清廉指数27分和26分。</div><div class="source">透明国际2025年清廉指数</div></div>
+      <div class="card yellow"><div class="name">尼日利亚与喀麦隆 <span class="level">黄色</span></div><div class="drivers">各为清廉指数26分。</div><div class="source">透明国际2025年清廉指数</div></div>
+      <div class="card yellow"><div class="name">安哥拉与菲律宾 <span class="level">黄色</span></div><div class="drivers">各为清廉指数32分。</div><div class="source">透明国际2025年清廉指数</div></div>
+    </div>
+  </div>
+
+  <!-- DRUGS -->
+  <div class="panel" id="drugs">
+    <div class="methodology">
+      <p><a class="live-link" href="https://www.unodc.org/unodc/en/data-and-analysis/index.html" target="_blank" rel="noopener">📡 实时数据看板/当前数据</a><br><strong>指标:</strong>联合国毒品和犯罪问题办公室2025年《世界毒品报告》及非法作物监测项目——依据在全球供应链中所扮演的角色(种植/生产,还是贩运中转,还是主要消费市场)来衡量,而不仅仅是国内消费率。</p>
+      <p><strong>红色</strong>=某种主要非法毒品(可卡因原料、鸦片,或占主导地位的合成毒品制造中心)的全球主要来源地。<strong>橙色</strong>=主要的贩运中转枢纽或次级生产国。<strong>黄色</strong>=消费量、缉获量或药物过量致死人数急剧上升的主要消费/目的地市场。</p>
+    </div>
+    <div class="legend">
+      <span><span class="dot red"></span>全球主要生产来源地</span>
+      <span><span class="dot orange"></span>主要贩运中转枢纽</span>
+      <span><span class="dot yellow"></span>主要消费市场,消费/死亡人数上升</span>
+    </div>
+    <div class="grid">
+      <div class="card red"><div class="name">哥伦比亚 <span class="level">红色</span></div><div class="drivers">全球占主导地位的古柯/可卡因生产国;2023年因单产提高,产量增长约50%,推动可卡因产量创下3708吨的全球纪录。</div><div class="source">联合国毒品和犯罪问题办公室2025年《世界毒品报告》</div></div>
+      <div class="card red"><div class="name">阿富汗 <span class="level">红色</span></div><div class="drivers">历史上占主导地位的全球鸦片来源地;2022年的种植禁令扰乱了生产,但大量库存仍然存在。</div><div class="source">联合国毒品和犯罪问题办公室2025年阿富汗鸦片调查</div></div>
+      <div class="card red"><div class="name">缅甸 <span class="level">红色</span></div><div class="drivers">随着阿富汗产量下降,鸦片产量正在上升;同时也是合成毒品(苯丙胺类兴奋剂)制造的重要中心,推动其在有组织犯罪地图上排名第一。</div><div class="source">联合国毒品和犯罪问题办公室2025年缅甸鸦片调查</div></div>
+      <div class="card orange"><div class="name">秘鲁与玻利维亚 <span class="level">橙色</span></div><div class="drivers">次级古柯生产国,在联合国毒品和犯罪问题办公室作物调查项目下与哥伦比亚一同受到监测。</div><div class="source">联合国毒品和犯罪问题办公室非法作物监测项目</div></div>
+      <div class="card orange"><div class="name">墨西哥 <span class="level">橙色</span></div><div class="drivers">重要的鸦片/海洛因生产国,也是合成阿片类药物(芬太尼)流入北美的主要贩运路线。</div><div class="source">联合国毒品和犯罪问题办公室2025年《世界毒品报告》</div></div>
+      <div class="card orange"><div class="name">厄瓜多尔 <span class="level">橙色</span></div><div class="drivers">已成为可卡因贩运的重要中转点,与其在犯罪地图上近期出现的暴力上升趋势相吻合。</div><div class="source">2023年全球有组织犯罪指数</div></div>
+      <div class="card orange"><div class="name">西巴尔干地区(区域性) <span class="level">橙色</span></div><div class="drivers">有组织犯罪团伙正在扩大其对欧洲可卡因贩运市场的影响力。</div><div class="source">联合国毒品和犯罪问题办公室2025年《世界毒品报告》</div></div>
+      <div class="card orange"><div class="name">尼日利亚 <span class="level">橙色</span></div><div class="drivers">受到监测的大麻种植来源地,也是西非/中非曲马多非医疗用途使用的中心。</div><div class="source">联合国毒品和犯罪问题办公室非法作物监测项目,2025年报告</div></div>
+      <div class="card yellow"><div class="name">美国 <span class="level">黄色</span></div><div class="drivers">合成阿片类药物的主要目的地;尽管近期相关死亡人数有所下降,但用药过量危机仍在持续。</div><div class="source">联合国毒品和犯罪问题办公室2025年《世界毒品报告》</div></div>
+      <div class="card yellow"><div class="name">西欧与中欧 <span class="level">黄色</span></div><div class="drivers">目前报告的可卡因缉获量已超过北美——成为新的主要目的地市场。</div><div class="source">联合国毒品和犯罪问题办公室2025年《世界毒品报告》</div></div>
+    </div>
+  </div>
+
+  <!-- VAW -->
+  <div class="panel" id="vaw">
+    <div class="methodology">
+      <p><a class="live-link" href="https://www.unwomen.org/en/news-stories" target="_blank" rel="noopener">📡 实时数据看板/当前数据</a><br><strong>指标:</strong>依据世卫组织/柳叶刀全球估算数据,15至49岁曾有伴侣关系女性遭受身体和/或性亲密伴侣暴力(IPV)的终身患病率,并与2024年联合国妇女署/联合国毒品和犯罪问题办公室的女性杀害报告(涉及致命后果)相互参照。</p>
+      <p><strong>红色</strong>=亲密伴侣暴力终身患病率≥45%。<strong>橙色</strong>=35–44.9%。<strong>黄色</strong>=28–34.9%——仍远高于全球约三分之一女性受影响的平均水平。</p>
+    </div>
+    <div class="legend">
+      <span><span class="dot red"></span>亲密伴侣暴力终身患病率≥45%</span>
+      <span><span class="dot orange"></span>35–44.9%</span>
+      <span><span class="dot yellow"></span>28–34.9%</span>
+    </div>
+    <div class="grid">
+      <div class="card red"><div class="name">基里巴斯 <span class="level">红色</span></div><div class="drivers">终身患病率53%——全球测得的最高水平。</div><div class="source">世卫组织/柳叶刀全球亲密伴侣暴力估算</div></div>
+      <div class="card red"><div class="name">斐济 <span class="level">红色</span></div><div class="drivers">终身患病率52%。</div><div class="source">世卫组织/柳叶刀全球亲密伴侣暴力估算</div></div>
+      <div class="card red"><div class="name">巴布亚新几内亚 <span class="level">红色</span></div><div class="drivers">终身患病率51%;在身体和性亲密伴侣暴力两方面均居全球最高之列。</div><div class="source">世卫组织/柳叶刀全球亲密伴侣暴力估算</div></div>
+      <div class="card red"><div class="name">孟加拉国与所罗门群岛 <span class="level">红色</span></div><div class="drivers">终身患病率各为50%。</div><div class="source">世卫组织/柳叶刀全球亲密伴侣暴力估算</div></div>
+      <div class="card red"><div class="name">刚果民主共和国与瓦努阿图 <span class="level">红色</span></div><div class="drivers">终身患病率各为47%;刚果民主共和国的过去一年亲密伴侣暴力发生率也是测得的最高水平(36%)。</div><div class="source">世卫组织/柳叶刀全球亲密伴侣暴力估算</div></div>
+      <div class="card red"><div class="name">阿富汗与赤道几内亚 <span class="level">红色</span></div><div class="drivers">终身患病率约46%;阿富汗在身体亲密伴侣暴力方面也是最高水平(45.8%)。</div><div class="source">世卫组织/柳叶刀全球亲密伴侣暴力估算</div></div>
+      <div class="card orange"><div class="name">喀麦隆 <span class="level">橙色</span></div><div class="drivers">终身患病率39%。</div><div class="source">世卫组织/柳叶刀全球亲密伴侣暴力估算</div></div>
+      <div class="card orange"><div class="name">秘鲁、卢旺达与坦桑尼亚 <span class="level">橙色</span></div><div class="drivers">终身患病率各为38%。</div><div class="source">世卫组织/柳叶刀全球亲密伴侣暴力估算</div></div>
+      <div class="card orange"><div class="name">埃塞俄比亚与几内亚 <span class="level">橙色</span></div><div class="drivers">终身患病率各为37%。</div><div class="source">世卫组织/柳叶刀全球亲密伴侣暴力估算</div></div>
+      <div class="card yellow"><div class="name">塞拉利昂 <span class="level">黄色</span></div><div class="drivers">终身患病率36%。</div><div class="source">世卫组织/柳叶刀全球亲密伴侣暴力估算</div></div>
+      <div class="card yellow"><div class="name">印度与津巴布韦 <span class="level">黄色</span></div><div class="drivers">终身患病率各为35%。</div><div class="source">世卫组织/柳叶刀全球亲密伴侣暴力估算</div></div>
+      <div class="card yellow"><div class="name">非洲(区域性女性杀害率) <span class="level">黄色</span></div><div class="drivers">全球最高的区域性女性杀害率,每10万名女性中有3人遇害——这是一项致命后果的衡量指标,与上文的亲密伴侣暴力患病率有所不同。</div><div class="source">2024年联合国妇女署/联合国毒品和犯罪问题办公室女性杀害报告</div></div>
+    </div>
+  </div>
+
+  <!-- MINORITIES -->
+  <div class="panel" id="minorities">
+    <div class="methodology">
+      <p><a class="live-link" href="https://globalwitness.org/en/campaigns/land-and-environmental-defenders/" target="_blank" rel="noopener">📡 实时数据看板/当前数据</a><br><strong>范围:</strong>本地图涵盖针对生活在更大国家范围内、<em>自我认同</em>的民族、族裔与原住民少数群体(罗姆人、库尔德人、原住民、维吾尔人及类似群体)的暴力与系统性歧视,而非通常也涉及多数人口的大规模暴行/种族灭绝的一般性局势(例如苏丹的内战)。数据来源包括欧盟基本权利局(FRA)对自我认同的罗姆人/游牧民受访者的调查、Global Witness对原住民土地捍卫者遇害情况的追踪,以及关于具名族裔少数群体(库尔德人、维吾尔人、罗兴亚人)的国别人权报告。</p>
+      <p><strong>红色</strong>=有记录的杀害/失踪事件,或针对该群体的系统性国家迫害。<strong>橙色</strong>=调查数据所记录的高比率仇恨动机暴力,或根深蒂固的歧视。<strong>黄色</strong>=有记录的歧视,但强度未达到红色/橙色所见的程度。</p>
+    </div>
+    <div class="legend">
+      <span><span class="dot red"></span>杀害/失踪或系统性迫害</span>
+      <span><span class="dot orange"></span>高比率的仇恨动机暴力(调查记录)</span>
+      <span><span class="dot yellow"></span>有记录的歧视,强度较低</span>
+    </div>
+    <div class="grid">
+      <div class="card red"><div class="name">中国——维吾尔族 <span class="level">红色</span></div><div class="drivers">对维吾尔族穆斯林及其他突厥语系/穆斯林少数群体的系统性迫害,全球保护责任中心评估其可能构成危害人类罪与种族灭绝。</div><div class="drivers"><strong>官方立场:</strong>中国政府将新疆的设施称为面向反极端主义的"职业教育培训中心",否认存在任何迫害行为。<strong>提出异议方:</strong>全球保护责任中心、美国国际宗教自由委员会,以及多位联合国人权专家,他们认为证据表明存在大规模拘留与文化压制。</div><div class="source">全球保护责任中心,2026年7月</div></div>
+      <div class="card red"><div class="name">缅甸——罗兴亚族 <span class="level">红色</span></div><div class="drivers">军政府与若开军均持续进行杀害、纵火和驱逐流离失所的行为;约63万人在类似种族隔离的限制下遭到禁锢。</div><div class="drivers"><strong>官方立场:</strong>缅甸军政府否认罗兴亚人是拥有公民身份权利的独立族裔群体,将其称为"孟加拉"移民,并对其2016-17年行动的种族灭绝定性提出异议。<strong>提出异议方:</strong>联合国人权事务高级专员办事处、种族灭绝观察、人权观察,以及冈比亚向国际法院提起的诉讼,他们均认为证据支持种族灭绝或危害人类罪的定性。</div><div class="source">联合国人权事务高级专员办事处,2026年9月;全球保护责任中心</div></div>
+      <div class="card red"><div class="name">哥伦比亚——原住民 <span class="level">红色</span></div><div class="drivers">连续第三年成为对土地/环境捍卫者而言最致命的国家(2024年有48人遇害);原住民是受影响最严重的群体之一。</div><div class="source">Global Witness,《抵抗之根》2025年报告</div></div>
+      <div class="card red"><div class="name">危地马拉——原住民 <span class="level">红色</span></div><div class="drivers">捍卫者(大多为原住民)遇害人数增至五倍,从2023年的4人增至2024年的20人——是全球人均比率最高的国家。</div><div class="source">Global Witness,《抵抗之根》2025年报告</div></div>
+      <div class="card red"><div class="name">墨西哥——原住民 <span class="level">红色</span></div><div class="drivers">2024年有18名捍卫者遇害,1人失踪;许多来自原住民社区(例如乔尔族、与瓦尤族相近的群体),他们反对有组织犯罪与采矿活动。</div><div class="source">Global Witness,《抵抗之根》2025年报告</div></div>
+      <div class="card orange"><div class="name">伊朗——库尔德人及其他少数群体 <span class="level">橙色</span></div><div class="drivers">针对库尔德、俾路支、阿瓦兹阿拉伯以及阿塞拜疆突厥裔社区的任意拘押、酷刑与处决;2025-26年安全行动力度加强。</div><div class="source">国际特赦组织2025年伊朗报告,库尔德斯坦人权网络2025-26年报告</div></div>
+      <div class="card orange"><div class="name">意大利——罗姆人/游牧民 <span class="level">橙色</span></div><div class="drivers">44%的受访罗姆人/游牧民报告在过去一年中遭受过仇恨动机的骚扰(2024年)——在受调查的欧盟国家中最高。</div><div class="source">2024年欧盟基本权利局罗姆人调查</div></div>
+      <div class="card orange"><div class="name">爱尔兰与葡萄牙——罗姆人/游牧民 <span class="level">橙色</span></div><div class="drivers">在2024年基本权利局调查中,与意大利一同录得最高的歧视比率之一。</div><div class="source">2024年欧盟基本权利局罗姆人调查</div></div>
+      <div class="card orange"><div class="name">巴西——原住民 <span class="level">橙色</span></div><div class="drivers">2024年有12名土地/环境捍卫者遇害,其中原住民社区占比过高。</div><div class="source">Global Witness,《抵抗之根》2025年报告</div></div>
+      <div class="card yellow"><div class="name">捷克与希腊——罗姆人/游牧民 <span class="level">黄色</span></div><div class="drivers">基本权利局调查中记录了歧视与骚扰,尽管略低于意大利/爱尔兰/葡萄牙的水平。</div><div class="source">2024/2025年欧盟基本权利局罗姆人调查</div></div>
+      <div class="card yellow"><div class="name">土耳其——库尔德人 <span class="level">黄色</span></div><div class="drivers">尽管2025年库尔德工人党与土耳其之间达成停火进程,针对库尔德语言与政治表达的根深蒂固歧视依然存在;依据澳大利亚外交贸易部的评估,官方"不允许充分行使"其语言/文化权利。</div><div class="source">澳大利亚外交贸易部2025年土耳其国别报告</div></div>
+      <div class="card yellow"><div class="name">整个欧盟——罗姆人(汇总) <span class="level">黄色</span></div><div class="drivers">整个欧盟范围内,80%受访罗姆人生活在贫困风险阈值以下(相较于欧盟平均水平的17%);歧视率停滞在约26%左右,未能达到欧盟自身设定的2030年削减目标。</div><div class="source">2022/2024年欧盟基本权利局罗姆人调查结果</div></div>
+    </div>
+  </div>
+
+  <!-- PRESS -->
+  <div class="panel" id="press">
+    <div class="methodology">
+      <p><a class="live-link" href="https://cpj.org/data/" target="_blank" rel="noopener">📡 实时数据看板/当前数据</a><br><strong>范围:</strong>本地图衡量的是记者能否在物理与法律层面报道事件,而不会因此被杀害、监禁,或遭受无需承担后果的暴力——而非媒体所有权的集中程度或编辑立场偏见。指标:保护记者委员会(CPJ)关于记者遇害与被监禁情况的数据(2025年),以及保护记者委员会全球有罪不罚指数(记者谋杀案未受惩处的情况)。</p>
+      <p><strong>红色</strong>=2025年因报道工作而被杀害的记者,和/或全球最恶劣的监禁国之一。<strong>橙色</strong>=出现在保护记者委员会全球有罪不罚指数中(记者谋杀案长期未得到解决),但未达到最恶劣的杀害/监禁层级。<strong>黄色</strong>=有记录的个案,记者因报道工作而被杀害、监禁,或面临严重的法律风险,但强度低于红色/橙色等级。</p>
+    </div>
+    <div class="legend">
+      <span><span class="dot red"></span>2025年记者遇害/最恶劣监禁国</span>
+      <span><span class="dot orange"></span>列于全球有罪不罚指数(未解决的谋杀案)</span>
+      <span><span class="dot yellow"></span>有记录的个案</span>
+    </div>
+    <div class="grid">
+      <div class="card red"><div class="name">以色列/加沙 <span class="level">红色</span></div><div class="drivers">2025年全球记者及媒体工作者遇害总数中的三分之二(创纪录的129人总数)由该地区造成;同时也是第三严重的监禁国,有29名巴勒斯坦记者未经指控被拘押。</div><div class="source">保护记者委员会,《2025年记者遇害人数创纪录达129人》报告,2026年</div></div>
+      <div class="card red"><div class="name">中国 <span class="level">红色</span></div><div class="drivers">连续第三年成为全球最恶劣的记者监禁国——50人被拘押,其中7人在香港;全球所有被监禁记者中有61%是以反国家罪名被拘押,中国正是这一模式的典型代表。</div><div class="source">保护记者委员会2025年监狱人口普查,2026年1月</div></div>
+      <div class="card red"><div class="name">缅甸 <span class="level">红色</span></div><div class="drivers">第二严重的监禁国(30人被拘押);自2021年政变以来,军方也直接杀害了报道抗议活动的记者。</div><div class="source">保护记者委员会2025年监狱人口普查,全球有罪不罚指数</div></div>
+      <div class="card orange"><div class="name">墨西哥 <span class="level">橙色</span></div><div class="drivers">过去十年间有28起未解决的记者谋杀案——是西半球所有国家中最高的;尽管有联邦保护计划,2025年仍出现一波遇害潮(6人遇害)。</div><div class="source">保护记者委员会全球有罪不罚指数,保护记者委员会2026年8月报告</div></div>
+      <div class="card orange"><div class="name">叙利亚、索马里、阿富汗、伊拉克 <span class="level">橙色</span></div><div class="drivers">在保护记者委员会全球有罪不罚指数中位居前五——过去十年间记者谋杀案根深蒂固且未受惩处。</div><div class="source">保护记者委员会全球有罪不罚指数</div></div>
+      <div class="card orange"><div class="name">巴基斯坦 <span class="level">橙色</span></div><div class="drivers">自2008年该指数设立以来,每年都出现在全球有罪不罚指数中;1992年以来共有39名记者遇害,仅有3起案件有某种问责结果。</div><div class="source">保护记者委员会,《如果你尖叫,没人会听见》,2024年</div></div>
+      <div class="card orange"><div class="name">海地、南苏丹、菲律宾、巴西、印度 <span class="level">橙色</span></div><div class="drivers">因未解决的记者谋杀案而持续出现在全球有罪不罚指数中。</div><div class="source">保护记者委员会全球有罪不罚指数</div></div>
+      <div class="card orange"><div class="name">伊朗 <span class="level">橙色</span></div><div class="drivers">2025年以色列袭击中遇害的记者被计入整体创纪录的总人数中;另外,伊朗也是国内主要的记者监禁国之一。</div><div class="source">保护记者委员会2025年报告</div></div>
+      <div class="card yellow"><div class="name">俄罗斯与白俄罗斯 <span class="level">黄色</span></div><div class="drivers">仅次于中国/缅甸/以色列,位列主要监禁国之一;一名乌克兰记者(维克多利亚·罗希奇纳)据称于2024年在俄罗斯拘押期间遇害。</div><div class="source">保护记者委员会2025年监狱人口普查</div></div>
+      <div class="card yellow"><div class="name">乌克兰 <span class="level">黄色</span></div><div class="drivers">记者在报道战争过程中遇害;截至2025年底,已有11名以上乌克兰记者被俄方拘押。</div><div class="source">保护记者委员会报告,2025年11月</div></div>
+      <div class="card yellow"><div class="name">埃塞俄比亚、埃及、土耳其 <span class="level">黄色</span></div><div class="drivers">被保护记者委员会列为"全球最恶劣的监禁国"之一,将政治新闻报道等同于反对派活动。</div><div class="source">保护记者委员会,近乎创纪录的监禁情况报告,2026年</div></div>
+      <div class="card yellow"><div class="name">美国 <span class="level">黄色</span></div><div class="drivers">通过对记者马里奥·格瓦拉长达数月的拘押,美国于2025年首次进入监禁记者的国家名单。</div><div class="source">保护记者委员会2025年监狱人口普查</div></div>
+      <div class="card yellow"><div class="name">危地马拉、洪都拉斯、哥伦比亚、秘鲁 <span class="level">黄色</span></div><div class="drivers">保护记者委员会记录了2025年发生在活跃战区之外的个别记者遇害事件。</div><div class="source">保护记者委员会,《2025年记者遇害人数创纪录达129人》报告,2026年</div></div>
+    </div>
+  </div>
+
+  <!-- ECONOMIC MIGRATION -->
+  <div class="panel" id="econmig">
+    <div class="methodology">
+      <p><a class="live-link" href="https://worldmigrationreport.iom.int/" target="_blank" rel="noopener">📡 实时数据看板/当前数据</a><br><strong>范围:</strong>主要由于国内经济已无法维系其生存——货币崩溃、恶性通货膨胀、失业、购买力下降——而离开的人群,有别于逃离战争/迫害的人群(参见武装冲突与少数群体地图)或逃离有组织犯罪暴力的人群(参见有组织犯罪地图)。在实践中,这些成因常常相互重叠(古巴与委内瑞拉将经济崩溃与政治压迫结合在一起),因此此处所列条目为经济崩溃是主要驱动因素、或明显独立于其他因素的国家,而非仅仅是冲突/犯罪的外溢效应。</p>
+      <p><strong>红色</strong>=有记录的大规模外流(几年内人口流失≥5%),且以经济崩溃作为所声明的主要驱动因素。<strong>橙色</strong>=大规模且持续的经济驱动型移民(人才外流、劳务移民),但未达到大规模外流程度的人口流失。<strong>黄色</strong>=对劳务移民/侨汇作为一种经济策略存在强烈的结构性依赖,这是一种较长期的模式,而非急性危机。</p>
+    </div>
+    <div class="legend">
+      <span><span class="dot red"></span>大规模外流,经济崩溃(人口流失≥5%)</span>
+      <span><span class="dot orange"></span>持续的大规模经济移民/人才外流</span>
+      <span><span class="dot yellow"></span>对劳务移民/侨汇的结构性依赖</span>
+    </div>
+    <div class="grid">
+      <div class="card red"><div class="name">古巴 <span class="level">红色</span></div><div class="drivers">自1959年革命以来最大规模的移民潮——官方数据显示,2022-23年间有超过100万人离境(约占总人口的10%);2024年又有超过25万人离境。这一波移民由货币崩溃、长期短缺与停电所驱动,与冷战时期先前几波政治流亡潮有所不同。</div><div class="source">古巴国家统计局(ONEI),Cuba Horizonte/哥伦比亚大学法学院,2024-25年</div></div>
+      <div class="card red"><div class="name">斯里兰卡 <span class="level">红色</span></div><div class="drivers">在该国经济主权违约之后,仅2022年上半年就有超过20万人为出国工作而离境(相较于2021年全年的12万人);政府主动降低移民年龄限制,以增加侨汇收入。</div><div class="source">《外交家》杂志,斯里兰卡外劳事务局,2022年</div></div>
+      <div class="card red"><div class="name">津巴布韦 <span class="level">红色</span></div><div class="drivers">在长达数十年的货币与经济危机中,已有超过一百万人身处海外侨民群体;移民已成为一种依靠侨汇维系的家庭生存策略。</div><div class="source">南部非洲移民计划,《津巴布韦的大迁徙》</div></div>
+      <div class="card orange"><div class="name">尼日利亚 <span class="level">橙色</span></div><div class="drivers">所谓"Japa"现象:据移民数据显示,仅2022-23年间就有超过360万人移民;由于奈拉货币崩溃与通货膨胀(而非冲突)所驱动,2023年科技专业毕业生中有38%离境,尼日利亚与加纳合计损失约23亿美元的人力资本。</div><div class="source">尼日利亚移民局(MIDAS),2023-24年学术研究</div></div>
+      <div class="card orange"><div class="name">黎巴嫩 <span class="level">橙色</span></div><div class="drivers">货币崩溃(自2019年以来贬值约98%)推动了熟练劳工的持续外流,这与该国自身面临的冲突风险有所区别。</div><div class="source">世界银行关于黎巴嫩的经济监测</div></div>
+      <div class="card orange"><div class="name">加纳 <span class="level">橙色</span></div><div class="drivers">与尼日利亚并列,属于西非"人才外流"的一部分——医疗与科技工作者因货币贬值和薪资停滞而离境。</div><div class="source">2024年人力资本损失学术研究</div></div>
+      <div class="card orange"><div class="name">委内瑞拉 <span class="level">橙色</span></div><div class="drivers">自2014年以来,已有超过700万人在恶性通货膨胀和经济崩溃中离境;此处将其归为橙色而非红色,是因为政治压迫也是一个重大且独立的驱动因素,这使得难以单独分离出经济因素的影响。</div><div class="source">联合国难民署/R4V区域平台</div></div>
+      <div class="card yellow"><div class="name">塔吉克斯坦 <span class="level">黄色</span></div><div class="drivers">侨汇相当于国内生产总值的约48%——全球最高的依赖比率——反映出一种围绕向俄罗斯输出劳务移民而构建的结构性经济。</div><div class="source">世界银行/theglobaleconomy.com,2024年数据</div></div>
+      <div class="card yellow"><div class="name">菲律宾 <span class="level">黄色</span></div><div class="drivers">全球主要的侨汇接收国之一;海外劳务移民是一项长期且由政府鼓励的经济策略,而非由危机驱动的外流。</div><div class="source">国际移民组织2024年世界移民报告</div></div>
+      <div class="card yellow"><div class="name">孟加拉国与尼泊尔 <span class="level">黄色</span></div><div class="drivers">重要的劳务输出经济体,对侨汇存在强烈的结构性依赖;国际移民组织特别指出孟加拉国正同时面临移民外流与流离失所的压力。</div><div class="source">国际移民组织2024年世界移民报告</div></div>
+      <div class="card yellow"><div class="name">墨西哥与印度 <span class="level">黄色</span></div><div class="drivers">位居全球侨汇接收国前列;大规模的经济移民由来已久且属于结构性现象,而非急性危机。</div><div class="source">2024/2026年世界移民报告,侨汇数据</div></div>
+    </div>
+  </div>
+
+  <!-- RELIGION -->
+  <div class="panel" id="religion">
+    <div class="methodology">
+      <p><a class="live-link" href="https://www.opendoors.org/world-watch-list/" target="_blank" rel="noopener">📡 实时数据看板/当前数据</a><br><strong>指标:</strong>两个相互补充、地位确立的监测机构——敞开的门世界守望名单(聚焦于反基督教迫害),以及美国国际宗教自由委员会(USCIRF)的"特别关注国"(CPC)/特别观察名单(涵盖所有宗教,包括对维吾尔族和罗兴亚族等穆斯林少数群体的待遇)。这两者都是整个领域内标准的参照来源,连政府和联合国机构也在使用。</p>
+      <p><strong>红色</strong>=敞开的门"极端迫害"等级(前15名)和/或美国国际宗教自由委员会的CPC认定。<strong>橙色</strong>=敞开的门排名16-30位和/或美国国际宗教自由委员会特别观察名单。<strong>黄色</strong>=特定且有记录的限制或事件,但未达到任一名单上最高层级的认定。</p>
+      <p><strong>关于范围的说明:</strong>无论是敞开的门名单还是美国国际宗教自由委员会的CPC/特别观察名单,乌克兰与以色列均未出现在其中——这两家使用最广泛的宗教自由监测机构均未将它们与朝鲜、阿富汗或中国并列。这两个国家确实都存在真实且有记录的宗教自由争议,以下将单独说明,而非将其纳入主要的红/橙/黄评级体系,因为那样做会夸大一手来源实际所表达的内容。</p>
+      <p><strong>关于方法的说明:</strong>倡导团体指数(敞开的门)和政府委员会(美国国际宗教自由委员会)之所以汇总难民证词、实地报告和新闻报道,正是因为在评分最差的国家内部,独立报道往往无法进行(朝鲜境内没有自由媒体可以核实敞开的门的数据)。当存在能够使某一指数框架复杂化的直接调查性新闻报道时——如下文的尼日利亚案例——该报道会与该指数一并引用,而非被省略。</p>
+    </div>
+    <div class="legend">
+      <span><span class="dot red"></span>极端迫害等级/美国国际宗教自由委员会CPC</span>
+      <span><span class="dot orange"></span>严重等级/美国国际宗教自由委员会特别观察名单</span>
+      <span><span class="dot yellow"></span>特定且有记录的限制,等级较低</span>
+    </div>
+    <div class="grid">
+      <div class="card red"><div class="name">朝鲜 <span class="level">红色</span></div><div class="drivers">自1993年以来第23次位居敞开的门名单第1位;现已使用人工智能辅助的国家监控来侦测基督徒信众。</div><div class="source">2026年敞开的门世界守望名单,美国国际宗教自由委员会CPC</div></div>
+      <div class="card red"><div class="name">阿富汗 <span class="level">红色</span></div><div class="drivers">塔利班针对宗教少数群体实施严格执法;2026年新列为美国国际宗教自由委员会CPC。</div><div class="source">美国国际宗教自由委员会2026年年度报告</div></div>
+      <div class="card red"><div class="name">中国 <span class="level">红色</span></div><div class="drivers">美国国际宗教自由委员会CPC;针对维吾尔族穆斯林及其他突厥语系少数群体的系统性国家迫害;家庭教会遭到搜查,基督徒受到监控。</div><div class="source">美国国际宗教自由委员会2026年年度报告</div></div>
+      <div class="card red"><div class="name">缅甸(缅甸) <span class="level">红色</span></div><div class="drivers">美国国际宗教自由委员会CPC;军方轰炸礼拜场所;罗兴亚族穆斯林与基督教族裔少数群体均遭到针对。</div><div class="source">美国国际宗教自由委员会2026年年度报告,敞开的门排名第4位</div></div>
+      <div class="card red"><div class="name">索马里、也门、苏丹、厄立特里亚 <span class="level">红色</span></div><div class="drivers">在2026年敞开的门名单中排名2-5位——针对基督教少数群体存在极端暴力和国家或武装分子的敌意;厄立特里亚同时也是美国国际宗教自由委员会长期认定的CPC。</div><div class="source">2026年敞开的门世界守望名单,美国国际宗教自由委员会CPC</div></div>
+      <div class="card red"><div class="name">叙利亚 <span class="level">红色</span></div><div class="drivers">阿萨德政权倒台后,该国出现了世界守望名单历史上单年评分涨幅最大的情况;美国国际宗教自由委员会于2026年将其新列为CPC,理由是针对阿拉维派、德鲁兹派与基督徒的教派屠杀事件。</div><div class="source">2026年敞开的门世界守望名单,美国国际宗教自由委员会2026年报告</div></div>
+      <div class="card red"><div class="name">尼日利亚 <span class="level">红色</span></div><div class="drivers">敞开的门数据显示:全球因信仰而遇害的基督徒中,有70%(4849人中的3490人)发生在此地;自2025年10月起被列为美国国际宗教自由委员会CPC。然而,英国广播公司非洲眼(BBC Africa Eye)于2026年9月开展的一项调查对"基督徒种族灭绝"这一框架提出了质疑,发现这种暴力源于治理薄弱、土地/资源冲突以及跨越宗教界线的族群紧张局势等复杂因素的混合作用——而非一场经中央组织的反基督教运动——该调查还对某些倡导团体统计中用以确定受害者宗教身份的方法论提出了质疑。</div><div class="source">2026年敞开的门世界守望名单,美国国际宗教自由委员会2026年报告,<em>英国广播公司非洲眼调查,2026年9月</em></div></div>
+      <div class="card red"><div class="name">巴基斯坦与伊朗 <span class="level">红色</span></div><div class="drivers">两国均位列敞开的门前十名;分别因与亵渎法相关的暴力,以及对巴哈伊教徒/基督徒的迫害而被认定为美国国际宗教自由委员会CPC。</div><div class="source">2026年敞开的门世界守望名单,美国国际宗教自由委员会CPC</div></div>
+      <div class="card orange"><div class="name">印度 <span class="level">橙色</span></div><div class="drivers">2026年美国国际宗教自由委员会新提出的CPC建议;反皈依法助长了针对穆斯林与基督徒的暴徒暴力。</div><div class="source">美国国际宗教自由委员会2026年年度报告</div></div>
+      <div class="card orange"><div class="name">俄罗斯与塔吉克斯坦 <span class="level">橙色</span></div><div class="drivers">两国均为美国国际宗教自由委员会长期认定的CPC;塔吉克斯坦特别剥夺了父母向子女传授信仰的权利。</div><div class="source">美国国际宗教自由委员会2026年年度报告</div></div>
+      <div class="card orange"><div class="name">沙特阿拉伯、古巴、尼加拉瓜 <span class="level">橙色</span></div><div class="drivers">美国国际宗教自由委员会CPC;据敞开的门数据,古巴也被评为拉丁美洲对基督徒迫害最严重的国家。</div><div class="source">美国国际宗教自由委员会2026年报告,2026年敞开的门世界守望名单</div></div>
+      <div class="card orange"><div class="name">利比亚、越南 <span class="level">橙色</span></div><div class="drivers">2026年新列为美国国际宗教自由委员会CPC——利比亚存在对苏菲派的道德监管/迫害;越南对独立信仰的打压力度加强。</div><div class="source">美国国际宗教自由委员会2026年年度报告</div></div>
+      <div class="card yellow"><div class="name">埃及、土耳其、伊拉克、印度尼西亚 <span class="level">黄色</span></div><div class="drivers">美国国际宗教自由委员会特别观察名单——存在严重侵犯行为,但尚未达到"特别严重"的程度。</div><div class="source">美国国际宗教自由委员会2026年年度报告</div></div>
+      <div class="card yellow"><div class="name">哈萨克斯坦、吉尔吉斯斯坦、乌兹别克斯坦 <span class="level">黄色</span></div><div class="drivers">美国国际宗教自由委员会特别观察名单;中亚地区存在限制性的宗教登记法律。</div><div class="source">美国国际宗教自由委员会2026年年度报告</div></div>
+      <div class="card yellow"><div class="name">斯里兰卡、马来西亚、阿尔及利亚、阿塞拜疆 <span class="level">黄色</span></div><div class="drivers">因存在严重且有记录、但未达到CPC认定门槛的限制,而被列入美国国际宗教自由委员会特别观察名单。</div><div class="source">美国国际宗教自由委员会2026年年度报告</div></div>
+    </div>
+
+    <div class="methodology" style="margin-top:1.1rem;">
+      <p><strong>有记录的争议,超出标准分类范围:</strong></p>
+      <p><strong>乌克兰——乌克兰东正教会(莫斯科宗主教区)。</strong>乌克兰2024年颁布的法律禁止其治理中心位于对乌克兰"实施武装侵略"国家境内的宗教组织,该法律的针对对象是乌克兰东正教会(莫斯科宗主教区),原因在于其与支持这场入侵的俄罗斯东正教会存在历史联系。乌克兰政府及许多乌克兰人将此举视为针对一个被用以施加外部影响的教会所采取的国家安全措施;乌克兰东正教会的部分领导人、联合国人权监测团以及联合国特别专家将其称为对宗教自由的限制。美国国际宗教自由委员会对该法律表达了关切,但同时也指出"俄罗斯仍是对乌克兰宗教自由构成最深层威胁的因素",包括在俄罗斯占领的乌克兰领土上实施的压制行为。就这一具体争议而言,乌克兰与俄罗斯均未出现在美国国际宗教自由委员会的CPC名单上;俄罗斯是出于其他更广泛的原因而被列为CPC的。</p>
+      <p><strong>以色列、约旦河西岸与加沙——宗教场所的准入与战争损毁。</strong>美国国务院的国际宗教自由报告记录了以下内容:以色列不时限制穆斯林进入易卜拉欣清真寺/先祖之墓并在那里进行祈祷宣礼;针对耶路撒冷基督教神职人员与圣地的袭击和破坏行为(近期报告中每年记录71至105起事件,定罪率较低);以及在以色列与哈马斯的战争期间,以色列的袭击造成在加沙清真寺与教堂中避难的穆斯林与基督徒死亡,并损毁了数十处宗教场所。以色列政府表示这些是出于安全考虑的措施,并对有关意图的定性提出异议。同样在这些报告中,也记录了巴勒斯坦权力机构对部分未被承认的宗教团体所施加的限制。以色列未出现在美国国际宗教自由委员会的CPC或特别观察名单中。</p>
+    </div>
+  </div>
+
+  <div class="foot">
+    <p><strong>为何采用独立地图:</strong>综合评分会掩盖导致某个国家不稳定的具体是哪一种问题。例如,南非在不平等和有组织犯罪方面是一个全球性的异常值,但在冲突或饥荒地图上却完全没有出现——单一的综合评分本会掩盖这种区别。</p>
+    <p><strong>快照,而非实时数据:</strong>冲突与饥荒数据每周都在变化(参见地图链接子页面获取实时追踪器);不平等与有组织犯罪评分则每年或更长时间才更新一次。</p>
+    <p><strong>关于存在争议的案例:</strong>各项分类反映的是所引用指数的报告内容,而非某种政治立场。</p>
+  </div>
+
+  <div class="sources">
+    <h2>来源,供逐项核查</h2>
+    <p class="sources-note">上文的每一项评级都可追溯到以下来源之一。在依据任何单个条目做出判断之前,请直接核实一手来源——尤其是冲突和疾病方面的数据,它们每周都在变化。</p>
+    <p class="sources-note"><span class="badge open">🔓 免费/开放获取</span>=无需登录或付费即可阅读。<span class="badge reg">🪪 需要免费注册</span>=全文免费,但出版方要求建立一个无需付费的账户(这是《柳叶刀》所采用的模式,而非付费墙)。<span class="badge lock">🔒 可能需要付费订阅</span>=出版方可能收费;请先查阅 PubMed/PMC 或作者自建的资料库,寻找免费副本。在下列来源中,只有《柳叶刀》的研究不属于直接开放获取,而且那是需要注册,而非付费——其余全部依据链接均可免费获取。</p>
+
+    <h3>武装冲突/战争</h3>
+    <ul>
+      <li><a href="https://acleddata.com/" target="_blank" rel="noopener">ACLED</a>——实时冲突事件数据与冲突指数 <span class="badge open">🔓 免费/开放获取</span></li>
+      <li><a href="https://acleddata.com/series/conflict-watchlist-2026" target="_blank" rel="noopener">2026年ACLED冲突观察名单</a> <span class="badge open">🔓 免费/开放获取</span></li>
+      <li><a href="https://fragilestatesindex.org/analytics/fsi-heat-map/" target="_blank" rel="noopener">脆弱国家指数——热力图</a>(和平基金会,2024/25年数据) <span class="badge open">🔓 免费/开放获取</span></li>
+      <li><a href="https://www.cfr.org/global-conflict-tracker" target="_blank" rel="noopener">外交关系委员会全球冲突追踪器</a> <span class="badge open">🔓 免费/开放获取</span></li>
+      <li><a href="https://ucdp.uu.se/" target="_blank" rel="noopener">乌普萨拉冲突数据项目(UCDP)</a> <span class="badge open">🔓 免费/开放获取</span></li>
+    </ul>
+
+    <h3>饥荒/粮食不安全</h3>
+    <ul>
+      <li><a href="https://www.ipcinfo.org/famine-facts/" target="_blank" rel="noopener">IPC 饥荒事实</a>(粮食安全阶段综合分类) <span class="badge open">🔓 免费/开放获取</span></li>
+      <li><a href="https://fews.net/" target="_blank" rel="noopener">FEWS NET</a>——饥荒预警系统网络 <span class="badge open">🔓 免费/开放获取</span></li>
+      <li><a href="https://www.fightfoodcrises.net/hunger-hotspots" target="_blank" rel="noopener">2026年粮农组织/世界粮食计划署饥荒热点</a> <span class="badge open">🔓 免费/开放获取</span></li>
+      <li><a href="https://www.fightfoodcrises.net/sites/default/files/resource/file/2026_GRFC_IN-BRIEF.pdf" target="_blank" rel="noopener">2026年全球粮食危机报告(GRFC)摘要</a> <span class="badge open">🔓 免费/开放获取</span></li>
+    </ul>
+
+    <h3>经济不平等</h3>
+    <ul>
+      <li><a href="https://ourworldindata.org/grapher/gini-coefficient-wb" target="_blank" rel="noopener">世界银行基尼系数数据(经由 Our World in Data)</a> <span class="badge open">🔓 免费/开放获取</span></li>
+      <li><a href="https://wid.world/world/" target="_blank" rel="noopener">世界不平等数据库——全球视图</a> <span class="badge open">🔓 免费/开放获取</span></li>
+      <li><a href="https://blogs.worldbank.org/en/opendata/the-geography-of-high-inequality--monitoring-the-world-bank-s-ne" target="_blank" rel="noopener">世界银行——《高度不平等的地理分布》</a>(解释基尼系数&gt;40这一阈值) <span class="badge open">🔓 免费/开放获取</span></li>
+    </ul>
+
+    <h3>犯罪暴力/有组织犯罪</h3>
+    <ul>
+      <li><a href="https://ocindex.net/" target="_blank" rel="noopener">全球有组织犯罪指数</a>(全球打击跨国有组织犯罪倡议组织) <span class="badge open">🔓 免费/开放获取</span></li>
+      <li><a href="https://ocindex.net/report/2023/04-continental-overview.html" target="_blank" rel="noopener">2023年全球有组织犯罪指数——大陆概览</a> <span class="badge open">🔓 免费/开放获取</span></li>
+    </ul>
+
+    <h3>疾病/疫情暴发</h3>
+    <ul>
+      <li><a href="https://www.who.int/publications/m/item/multi-country-outbreak-of-cholera--epidemiological-update--38--30-june-2026" target="_blank" rel="noopener">世卫组织——多国霍乱疫情,第38期流行病学更新(2026年6月)</a> <span class="badge open">🔓 免费/开放获取</span></li>
+      <li><a href="https://en.wikipedia.org/wiki/2026_Central_Africa_Ebola_epidemic" target="_blank" rel="noopener">2026年中非埃博拉疫情——概览及世卫组织PHEIC宣布</a> <span class="badge open">🔓 免费/开放获取</span></li>
+      <li><a href="https://www.ecdc.europa.eu/en/all-topics-z/cholera/surveillance-and-disease-data/cholera-monthly" target="_blank" rel="noopener">欧洲疾病预防控制中心——全球霍乱月度概览</a> <span class="badge open">🔓 免费/开放获取</span></li>
+      <li><a href="https://www.unicef.org/press-releases/cholera-spreads-across-borders-west-and-central-africa-unicef-calls-urgent-action" target="_blank" rel="noopener">联合国儿童基金会——霍乱在西非与中非跨境蔓延(2026年8月)</a> <span class="badge open">🔓 免费/开放获取</span></li>
+    </ul>
+
+    <h3>腐败</h3>
+    <ul>
+      <li><a href="https://www.transparency.org/en/news/cpi-2025-findings-insights-corruption" target="_blank" rel="noopener">透明国际——2025年清廉指数:调查结果与洞见</a> <span class="badge open">🔓 免费/开放获取</span></li>
+      <li><a href="https://files.transparencycdn.org/images/CPI-2025-Report-EN.pdf" target="_blank" rel="noopener">透明国际——2025年清廉指数,完整报告(PDF)</a> <span class="badge open">🔓 免费/开放获取</span></li>
+      <li><a href="https://www.transparency.org/en/press/corruption-perceptions-index-2025-corruption-across-americas-damaging-peoples-lives-is-fuelling-violence" target="_blank" rel="noopener">透明国际——2025年清廉指数,美洲区域分析</a> <span class="badge open">🔓 免费/开放获取</span></li>
+    </ul>
+
+    <h3>毒品生产/贩运</h3>
+    <ul>
+      <li><a href="https://www.unodc.org/documents/data-and-analysis/WDR_2025/WDR25_B1_Key_findings.pdf" target="_blank" rel="noopener">联合国毒品和犯罪问题办公室——2025年《世界毒品报告》,主要调查结果(PDF)</a> <span class="badge open">🔓 免费/开放获取</span></li>
+      <li><a href="https://www.unodc.org/unodc/en/crop-monitoring/" target="_blank" rel="noopener">联合国毒品和犯罪问题办公室——非法作物监测项目</a>(按国家划分的古柯、鸦片、大麻调查) <span class="badge open">🔓 免费/开放获取</span></li>
+      <li><a href="https://unis.unvienna.org/unis/en/pressrels/2025/unisnar1499.html" target="_blank" rel="noopener">联合国新闻处——2025年《世界毒品报告》新闻稿</a> <span class="badge open">🔓 免费/开放获取</span></li>
+    </ul>
+
+    <h3>针对妇女的暴力</h3>
+    <ul>
+      <li><a href="https://www.thelancet.com/article/S0140-6736(21)02664-7/fulltext" target="_blank" rel="noopener">柳叶刀——亲密伴侣暴力患病率的全球、区域及国家层面估算</a> <span class="badge reg">🪪 需要免费注册(而非付费订阅)</span></li>
+      <li><a href="https://www.unwomen.org/sites/default/files/2025-11/femicides-in-2024-global-estimates-of-intimate-partner-family-member-femicides-en.pdf" target="_blank" rel="noopener">联合国妇女署/联合国毒品和犯罪问题办公室——2024年女性杀害情况:全球估算(PDF)</a> <span class="badge open">🔓 免费/开放获取</span></li>
+      <li><a href="https://www.unwomen.org/en/news-stories/press-release/2025/11/every-day-137-women-and-girls-are-killed-by-intimate-partners-or-family-members" target="_blank" rel="noopener">联合国妇女署——新闻稿,2025年11月</a> <span class="badge open">🔓 免费/开放获取</span></li>
+    </ul>
+
+    <h3>针对少数群体的暴力(自我认同的民族/族裔少数群体)</h3>
+    <ul>
+      <li><a href="https://fra.europa.eu/sites/default/files/fra_uploads/fra-2025-roma-survey-2024_en.pdf" target="_blank" rel="noopener">欧盟基本权利局——2024年罗姆人与游牧民调查(13个国家,自我认同的受访者)</a> <span class="badge open">🔓 免费/开放获取</span></li>
+      <li><a href="https://fra.europa.eu/en/publication/2022/roma-survey-findings" target="_blank" rel="noopener">欧盟基本权利局——罗姆人调查结果</a> <span class="badge open">🔓 免费/开放获取</span></li>
+      <li><a href="https://globalwitness.org/en/campaigns/land-and-environmental-defenders/roots-of-resistance/" target="_blank" rel="noopener">Global Witness——《抵抗之根》2025年报告(土地/环境/原住民捍卫者遇害情况)</a> <span class="badge open">🔓 免费/开放获取</span></li>
+      <li><a href="https://www.amnesty.org/en/location/middle-east-and-north-africa/middle-east/iran/report-iran/" target="_blank" rel="noopener">国际特赦组织——2025年伊朗报告</a> <span class="badge open">🔓 免费/开放获取</span></li>
+      <li><a href="https://www.dfat.gov.au/sites/default/files/country-information-report-turkey.pdf" target="_blank" rel="noopener">澳大利亚外交贸易部——2025年土耳其国别报告(库尔德人相关章节)</a> <span class="badge open">🔓 免费/开放获取</span></li>
+      <li><a href="https://www.globalr2p.org/populations-at-risk/" target="_blank" rel="noopener">全球保护责任中心——处于风险中的人群</a>(用于维吾尔族/罗兴亚族的分类) <span class="badge open">🔓 免费/开放获取</span></li>
+      <li><a href="https://www.ohchr.org/en/stories/2026/09/myanmars-rohingya-and-other-minorities-face-renewed-terror-illicit-economies-boom" target="_blank" rel="noopener">联合国人权事务高级专员办事处——缅甸罗兴亚族及其他少数群体面临新一轮恐怖(2026年9月)</a> <span class="badge open">🔓 免费/开放获取</span></li>
+    </ul>
+
+    <h3>记者的报道自由</h3>
+    <ul>
+      <li><a href="https://cpj.org/special-reports/record-129-press-members-killed-in-2025-israel-responsible-for-2-of-3-of-deaths/" target="_blank" rel="noopener">保护记者委员会——2025年记者遇害人数创纪录达129人</a> <span class="badge open">🔓 免费/开放获取</span></li>
+      <li><a href="https://cpj.org/2026/01/journalist-jailings-imperil-a-free-press-worldwide-amid-reports-of-life-threatening-prison-conditions-cpj/" target="_blank" rel="noopener">保护记者委员会——2025年监狱人口普查(中国、缅甸、以色列为主要监禁国)</a> <span class="badge open">🔓 免费/开放获取</span></li>
+      <li><a href="https://cpj.org/campaigns/campaign-against-impunity/" target="_blank" rel="noopener">保护记者委员会——全球有罪不罚指数</a> <span class="badge open">🔓 免费/开放获取</span></li>
+      <li><a href="https://cpj.org/2026/08/amid-spike-in-journalist-killings-in-mexico-cpj-urges-federalizing-cases-to-end-impunity/" target="_blank" rel="noopener">保护记者委员会——墨西哥记者遇害人数激增,2026年8月</a> <span class="badge open">🔓 免费/开放获取</span></li>
+    </ul>
+
+    <h3>经济移民</h3>
+    <ul>
+      <li><a href="https://en.cibercuba.com/noticias/2025-05-23-u1-e42839-s27061-nid303477-exodo-imparable-250000-cubanos-emigraron-2024" target="_blank" rel="noopener">古巴国家统计局(ONEI)——2024年移民数据</a> <span class="badge open">🔓 免费/开放获取</span></li>
+      <li><a href="https://horizontecubano.law.columbia.edu/news/economic-crisis-cuba-its-causes-and-migration" target="_blank" rel="noopener">哥伦比亚大学法学院/Cuba Horizonte——古巴的经济危机及其成因与移民问题</a> <span class="badge open">🔓 免费/开放获取</span></li>
+      <li><a href="https://thediplomat.com/2022/09/sri-lankas-worrying-exodus/" target="_blank" rel="noopener">《外交家》杂志——斯里兰卡令人担忧的外流潮,2022年</a> <span class="badge open">🔓 免费/开放获取</span></li>
+      <li><a href="https://ar-journal.com/index.php/pub/article/view/65" target="_blank" rel="noopener">《人才大外流》——尼日利亚/加纳人力资本损失研究,2024年</a> <span class="badge open">🔓 免费/开放获取</span></li>
+      <li><a href="https://worldmigrationreport.iom.int/what-we-do/world-migration-report-2026/chapter-2/international-remittances" target="_blank" rel="noopener">国际移民组织世界移民报告——国际侨汇章节</a> <span class="badge open">🔓 免费/开放获取</span></li>
+      <li><a href="https://reliefweb.int/report/world/world-migration-report-2024-enpt" target="_blank" rel="noopener">国际移民组织2024年世界移民报告</a> <span class="badge open">🔓 免费/开放获取</span></li>
+      <li><a href="https://www.theglobaleconomy.com/rankings/remittances_percent_GDP/" target="_blank" rel="noopener">各国侨汇占国内生产总值百分比(世界银行数据)</a> <span class="badge open">🔓 免费/开放获取</span></li>
+    </ul>
+
+    <h3>宗教自由/迫害</h3>
+    <ul>
+      <li><a href="https://www.opendoors.org/world-watch-list/" target="_blank" rel="noopener">敞开的门——2026年世界守望名单</a> <span class="badge open">🔓 免费/开放获取</span></li>
+      <li><a href="https://www.uscirf.gov/sites/default/files/2026-03/USCIRF_2026_AR_3326_NEW.pdf" target="_blank" rel="noopener">美国国际宗教自由委员会——2026年年度报告(PDF)</a> <span class="badge open">🔓 免费/开放获取</span></li>
+      <li><a href="https://www.uscirf.gov/countries/2026-recommendations" target="_blank" rel="noopener">美国国际宗教自由委员会——2026年国别建议(CPC/特别观察名单)</a> <span class="badge open">🔓 免费/开放获取</span></li>
+      <li><a href="https://www.ohchr.org/en/press-releases/2025/10/ukraine-un-experts-warn-persecution-against-ukrainian-orthodox-church" target="_blank" rel="noopener">联合国人权事务高级专员办事处——联合国专家关于乌克兰东正教会法律的表态,2025年10月</a> <span class="badge open">🔓 免费/开放获取</span></li>
+      <li><a href="https://www.state.gov/reports/2023-report-on-international-religious-freedom/ukraine/" target="_blank" rel="noopener">美国国务院——2023年国际宗教自由报告:乌克兰</a> <span class="badge open">🔓 免费/开放获取</span></li>
+      <li><a href="https://www.state.gov/reports/2023-report-on-international-religious-freedom/israel-west-bank-and-gaza/" target="_blank" rel="noopener">美国国务院——2023年国际宗教自由报告:以色列、约旦河西岸与加沙</a> <span class="badge open">🔓 免费/开放获取</span></li>
+      <li><a href="https://saharareporters.com/2026/09/03/bbc-africa-eye-investigation-questions-christian-genocide-narrative-nigeria-finds" target="_blank" rel="noopener">英国广播公司非洲眼关于尼日利亚"基督徒种族灭绝"叙事的调查,2026年9月(经由 Sahara Reporters 转载)</a> <span class="badge open">🔓 免费/开放获取</span></li>
+    </ul>
+  </div>
+
+  <div class="foot">
+    <p>依据 <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener">CC BY 4.0</a> 许可协议发布——请参阅项目文件夹中的 LICENSE-zh.html 了解其涵盖范围。底层的第三方数据(各类指数、世卫组织/联合国报告等)保留其自身的许可协议/版权。</p>
+  </div>
+
+</div>
+
+<style>
+  .sources{margin-top:2.2rem;padding-top:1.4rem;border-top:2px solid var(--line);}
+  .sources h2{font-size:1.15rem;margin:0 0 0.4rem;font-weight:600;}
+  .sources-note{font-size:0.86rem;color:var(--muted);margin:0 0 1.2rem;max-width:70ch;}
+  .sources h3{font-size:0.95rem;margin:1.1rem 0 0.4rem;font-weight:700;}
+  .sources ul{margin:0 0 0.4rem;padding-left:1.2rem;}
+  .sources li{font-size:0.88rem;margin-bottom:0.3rem;}
+  .sources a{color:#5b4a2f;}
+  .sources a:hover{color:var(--red);}
+  .badge{display:inline-block;font-size:0.72rem;padding:0.1rem 0.45rem;border-radius:3px;margin-left:0.3rem;white-space:nowrap;}
+  .badge.open{background:#e2ede2;color:#2f5c34;}
+  .badge.reg{background:#eee8d5;color:#7a6a1f;}
+  .badge.lock{background:#f3ded9;color:#8a3a24;}
+  .freshness{border:1px solid var(--line);background:#fff;border-radius:4px;padding:1rem 1.2rem;margin-bottom:1.6rem;}
+  .why-maps{font-size:0.92rem;color:#3a3730;max-width:78ch;margin:0 0 1.6rem;line-height:1.6;padding:0.9rem 1.1rem;background:#f2ede0;border-left:3px solid #a9631a;border-radius:0 4px 4px 0;}
+  .freshness-title{font-weight:700;font-size:0.95rem;margin:0 0 0.5rem;}
+  .cadence-table{width:100%;border-collapse:collapse;margin-top:0.8rem;font-size:0.83rem;}
+  .cadence-table th{text-align:left;border-bottom:2px solid var(--line);padding:0.35rem 0.5rem;}
+  .cadence-table td{border-bottom:1px solid var(--line);padding:0.35rem 0.5rem;color:#3a3730;}
+  .live-link{font-size:0.82rem;font-weight:600;display:inline-block;margin-top:0.3rem;}
+</style>
+
+<script>
+  document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById(btn.dataset.tab).classList.add('active');
+    });
+  });
+</script>
+</body>
+</html>

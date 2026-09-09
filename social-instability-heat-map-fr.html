@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>Carte de Chaleur de l'Instabilité Sociale</title>
+<style>
+  :root{
+    --ink:#1c1a17;
+    --paper:#faf7f2;
+    --line:#d8d2c6;
+    --red:#b3261e;
+    --red-bg:#f8e4e2;
+    --orange:#a9631a;
+    --orange-bg:#f6e9d6;
+    --yellow:#8a7215;
+    --yellow-bg:#f5f0d8;
+    --muted:#6b675f;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family: Georgia, 'Iowan Old Style', serif;
+    line-height:1.5;
+    padding:2.5rem 1.5rem 4rem;
+  }
+  .wrap{max-width:920px;margin:0 auto;}
+  h1{
+    font-size:2rem;
+    margin:0 0 0.3rem;
+    font-weight:600;
+  }
+  .sub{
+    color:var(--muted);
+    font-size:1.02rem;
+    max-width:64ch;
+    margin:0 0 1.8rem;
+  }
+  .methodology{
+    border:1px solid var(--line);
+    background:#fff;
+    border-radius:4px;
+    padding:1rem 1.2rem;
+    font-size:0.92rem;
+    color:#3a3730;
+    margin-bottom:2.2rem;
+  }
+  .methodology p{margin:0.4rem 0;}
+  .legend{
+    display:flex;
+    gap:1.4rem;
+    flex-wrap:wrap;
+    margin:0 0 2rem;
+    font-size:0.9rem;
+  }
+  .legend span{
+    display:inline-flex;
+    align-items:center;
+    gap:0.5rem;
+  }
+  .dot{width:12px;height:12px;border-radius:50%;display:inline-block;}
+  .dot.red{background:var(--red);}
+  .dot.orange{background:var(--orange);}
+  .dot.yellow{background:var(--yellow);}
+
+  .region{margin-bottom:2.4rem;}
+  .region h2{
+    font-size:1.15rem;
+    border-bottom:1px solid var(--line);
+    padding-bottom:0.4rem;
+    margin-bottom:0.9rem;
+    font-weight:600;
+  }
+  .grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill,minmax(260px,1fr));
+    gap:0.7rem;
+  }
+  .card{
+    border-radius:4px;
+    padding:0.75rem 0.9rem;
+    border:1px solid transparent;
+  }
+  .card.red{background:var(--red-bg); border-color:#e3b7b2;}
+  .card.orange{background:var(--orange-bg); border-color:#e0c193;}
+  .card.yellow{background:var(--yellow-bg); border-color:#dcd08f;}
+  .card .name{
+    font-weight:700;
+    font-size:1rem;
+    display:flex;
+    justify-content:space-between;
+    align-items:baseline;
+  }
+  .card .level{
+    font-size:0.72rem;
+    text-transform:uppercase;
+    letter-spacing:0.03em;
+    font-weight:600;
+  }
+  .card.red .level{color:var(--red);}
+  .card.orange .level{color:var(--orange);}
+  .card.yellow .level{color:var(--yellow);}
+  .card .drivers{
+    font-size:0.86rem;
+    color:#4a473f;
+    margin-top:0.25rem;
+  }
+  .card .source{
+    font-size:0.76rem;
+    color:var(--muted);
+    margin-top:0.35rem;
+    font-style:italic;
+  }
+  .foot{
+    margin-top:2.5rem;
+    padding-top:1.2rem;
+    border-top:1px solid var(--line);
+    font-size:0.86rem;
+    color:var(--muted);
+  }
+  .foot p{margin:0.5rem 0;}
+</style>
+</head>
+<body>
+<div class="nav" style="background:#2b2a26; color:#e8e3d8; padding:0.9rem 1.5rem; display:flex; flex-wrap:wrap; gap:0.3rem 1rem; font-family:Georgia,serif; font-size:0.88rem;">
+  <a class="home" style="color:#e8e3d8; text-decoration:none; font-weight:700;" href="index-fr.html">Accueil</a>
+  <a style="color:#e8e3d8; text-decoration:none; opacity:0.85;" href="sociology-websites-directory-fr.html">Répertoire de Sociologie</a>
+  <a style="color:#e8e3d8; text-decoration:none; opacity:0.85;" href="social-problems-current-events-links-fr.html">Actualités</a>
+  <a style="color:#e8e3d8; text-decoration:none; opacity:0.85;" href="social-instability-maps-links-fr.html">Liens vers les Cartes</a>
+  <a style="color:#e8e3d8; text-decoration:none; opacity:0.85;" href="social-instability-heat-map-fr.html">Carte de Chaleur</a>
+  <a style="color:#e8e3d8; text-decoration:none; opacity:0.85;" href="social-instability-maps-by-type-fr.html">Cartes par Type</a>
+  <a style="color:#e8e3d8; text-decoration:none; opacity:0.85;" href="key-contributors-social-problems-fr.html">Contributeurs</a>
+  <a style="color:#e8e3d8; text-decoration:none; opacity:0.85;" href="theoretical-sociologists-philosophers-fr.html">Théoriciens</a>
+  <a style="color:#e8e3d8; text-decoration:none; opacity:0.85;" href="sociology-sponsors-power-control-fr.html">Pouvoir et Commanditaires</a>
+  <a style="color:#e8e3d8; text-decoration:none; opacity:0.85;" href="selected-works-by-contributor-fr.html">Œuvres</a>
+  <a style="color:#e8e3d8; text-decoration:none; opacity:0.85;" href="LICENSE-fr.html">Licence</a>
+</div>
+<div class="wrap">
+
+  <h1>Carte de Chaleur de l'Instabilité Sociale</h1>
+  <p class="sub">Un instantané composite, fondé sur des sources, de la concentration actuelle de l'instabilité enracinée face à l'émergente — construit à partir d'indices publiés, non d'opinions.</p>
+
+  <div class="methodology">
+    <p><strong>Comment les couleurs ont été attribuées.</strong> Le niveau de chaque pays reflète sa position dans trois sources actuelles et citées : le <strong>Fragile States Index 2024/25</strong> (Fund for Peace — score composite de sécurité, économie, droits humains, cohésion), le rapport <strong>FAO/PAM Hunger Hotspots 2026</strong> (niveaux de préoccupation la plus élevée/très élevée en insécurité alimentaire aiguë), et la <strong>liste de vigilance des conflits d'ACLED</strong> / le suivi des conflits actifs.</p>
+    <p><strong>Rouge</strong> = crises enracinées et superposées (p. ex. guerre active + risque de famine + score parmi les 15 plus élevés du FSI). <strong>Orange</strong> = une crise grave et en cours sur une seule dimension, ou fragilité de niveau intermédiaire. <strong>Jaune</strong> = une préoccupation émergente ou localisée signalée dans au moins un indice, sans l'accumulation observée en rouge/orange.</p>
+    <p>Ceci est un instantané sourcé de septembre 2026 ; tous ces indices se mettent à jour selon leur propre calendrier, donc traitez ceci comme un point de départ et consultez la source primaire pour toute question sensible au temps (voir la sous-page des cartes pour des liens directs).</p>
+  </div>
+
+  <div class="legend">
+    <span><span class="dot red"></span>Rouge — enraciné / superposé</span>
+    <span><span class="dot orange"></span>Orange — grave, une seule crise majeure</span>
+    <span><span class="dot yellow"></span>Jaune — préoccupation émergente / localisée</span>
+  </div>
+
+  <div class="region">
+    <h2>Corne de l'Afrique et Sahel</h2>
+    <div class="grid">
+      <div class="card red"><div class="name">Soudan <span class="level">Rouge</span></div><div class="drivers">Guerre civile (SAF contre RSF) ; famine de Phase 5 de l'IPC confirmée à El Fasher et Kadugli, 2025 ; parmi les 10 premiers du FSI.</div><div class="source">FSI 2024/25, Revue de la Famine de l'IPC sept. 2025, Hunger Hotspots 2026</div></div>
+      <div class="card red"><div class="name">Soudan du Sud <span class="level">Rouge</span></div><div class="drivers">Parmi les 5 premiers du FSI ; risque récurrent de famine ; 2,2 millions d'enfants en malnutrition aiguë (2026).</div><div class="source">FSI 2024/25, Hunger Hotspots 2026</div></div>
+      <div class="card red"><div class="name">Somalie <span class="level">Rouge</span></div><div class="drivers">N° 1 le plus fragile du FSI depuis 2008 ; risque récurrent de famine ; insurrection en cours.</div><div class="source">FSI 2024/25, Hunger Hotspots 2026</div></div>
+      <div class="card orange"><div class="name">Éthiopie <span class="level">Orange</span></div><div class="drivers">Parmi les 15 premiers du FSI ; conflit interne et pression du déplacement.</div><div class="source">FSI 2024/25</div></div>
+      <div class="card orange"><div class="name">Tchad <span class="level">Orange</span></div><div class="drivers">Parmi les 10 premiers du FSI ; reçoit d'importants flux de réfugiés du Soudan.</div><div class="source">FSI 2024/25</div></div>
+      <div class="card orange"><div class="name">Mali <span class="level">Orange</span></div><div class="drivers">Parmi les 15 premiers du FSI ; insurrection djihadiste, tensions de gouvernance post-coup.</div><div class="source">FSI 2024/25</div></div>
+      <div class="card orange"><div class="name">Niger et Burkina Faso <span class="level">Orange</span></div><div class="drivers">Ceinture d'insurrection du Sahel ; instabilité de gouvernance post-coup.</div><div class="source">Liste de vigilance des conflits d'ACLED</div></div>
+      <div class="card orange"><div class="name">Nigéria <span class="level">Orange</span></div><div class="drivers">Niveau de « préoccupation maximale » dans Hunger Hotspots (2026) ; insurrection de Boko Haram/ISWAP dans le nord-est.</div><div class="source">Hunger Hotspots 2026, FSI 2024/25</div></div>
+    </div>
+  </div>
+
+  <div class="region">
+    <h2>Moyen-Orient</h2>
+    <div class="grid">
+      <div class="card red"><div class="name">Yémen <span class="level">Rouge</span></div><div class="drivers">Parmi les 5 premiers du FSI ; préoccupation maximale dans Hunger Hotspots ; guerre civile prolongée.</div><div class="source">FSI 2024/25, Hunger Hotspots 2026</div></div>
+      <div class="card red"><div class="name">Syrie <span class="level">Rouge</span></div><div class="drivers">Parmi les 5 premiers du FSI ; fragilité de la reconstruction post-conflit, déplacement.</div><div class="source">FSI 2024/25</div></div>
+      <div class="card red"><div class="name">Gaza / Palestine <span class="level">Rouge</span></div><div class="drivers">Famine confirmée (Phase 5 de l'IPC) en 2025 ; parmi les 15 premiers du FSI ; conflit actif.</div><div class="source">IPC Famine Facts, FSI 2024/25</div></div>
+      <div class="card orange"><div class="name">Liban <span class="level">Orange</span></div><div class="drivers">Effondrement économique, paralysie politique, exposition aux retombées du conflit régional.</div><div class="source">Suivi régional d'ACLED</div></div>
+      <div class="card orange"><div class="name">Irak <span class="level">Orange</span></div><div class="drivers">Fragilité de niveau intermédiaire au FSI ; activité insurrectionnelle résiduelle, tensions de gouvernance.</div><div class="source">FSI 2024/25</div></div>
+    </div>
+  </div>
+
+  <div class="region">
+    <h2>Asie et Asie centrale</h2>
+    <div class="grid">
+      <div class="card red"><div class="name">Afghanistan <span class="level">Rouge</span></div><div class="drivers">Parmi les 10 premiers du FSI ; « très haute préoccupation » dans Hunger Hotspots ; effondrement économique sous sanctions/isolement.</div><div class="source">FSI 2024/25, Hunger Hotspots 2026</div></div>
+      <div class="card red"><div class="name">Myanmar <span class="level">Rouge</span></div><div class="drivers">Parmi les 15 premiers du FSI ; guerre civile en cours depuis le coup d'État de 2021, multiples fronts actifs.</div><div class="source">FSI 2024/25, ACLED</div></div>
+      <div class="card orange"><div class="name">Pakistan <span class="level">Orange</span></div><div class="drivers">Fragilité de niveau intermédiaire ; tensions économiques, violence militante périodique.</div><div class="source">FSI 2024/25</div></div>
+      <div class="card yellow"><div class="name">Bangladesh <span class="level">Jaune</span></div><div class="drivers">Volatilité de la transition politique depuis 2024 ; troubles localisés.</div><div class="source">Suivi régional d'ACLED</div></div>
+    </div>
+  </div>
+
+  <div class="region">
+    <h2>Amériques</h2>
+    <div class="grid">
+      <div class="card red"><div class="name">Haïti <span class="level">Rouge</span></div><div class="drivers">Parmi les 10 premiers du FSI ; contrôle des gangs sur la majeure partie de la capitale ; très haute préoccupation dans Hunger Hotspots.</div><div class="source">FSI 2024/25, Hunger Hotspots 2026</div></div>
+      <div class="card orange"><div class="name">Venezuela <span class="level">Orange</span></div><div class="drivers">Crise économique/politique prolongée ; émigration soutenue à grande échelle.</div><div class="source">Données de tendance du FSI</div></div>
+      <div class="card orange"><div class="name">Honduras et Salvador <span class="level">Orange</span></div><div class="drivers">Charge historique élevée de violence criminelle ; la politique d'état d'urgence au Salvador reconfigure le tableau.</div><div class="source">Global Organized Crime Index</div></div>
+      <div class="card orange"><div class="name">Équateur <span class="level">Orange</span></div><div class="drivers">Forte hausse récente de la violence du crime organisé et du taux d'homicides.</div><div class="source">Global Organized Crime Index</div></div>
+      <div class="card yellow"><div class="name">Colombie <span class="level">Jaune</span></div><div class="drivers">Activité résiduelle des groupes armés après le processus de paix ; foyers localisés.</div><div class="source">Suivi régional d'ACLED</div></div>
+    </div>
+  </div>
+
+  <div class="region">
+    <h2>Afrique centrale</h2>
+    <div class="grid">
+      <div class="card red"><div class="name">RD du Congo <span class="level">Rouge</span></div><div class="drivers">Parmi les 5 premiers du FSI ; offensive du M23 et déplacement massif dans l'est ; très haute préoccupation dans Hunger Hotspots.</div><div class="source">FSI 2024/25, Hunger Hotspots 2026</div></div>
+      <div class="card red"><div class="name">République centrafricaine <span class="level">Rouge</span></div><div class="drivers">Parmi les 10 premiers du FSI ; fragmentation de longue date des groupes armés.</div><div class="source">FSI 2024/25</div></div>
+      <div class="card orange"><div class="name">Libye <span class="level">Orange</span></div><div class="drivers">Parmi les 20 premiers du FSI ; gouvernance divisée, affrontements périodiques de milices.</div><div class="source">FSI 2024/25</div></div>
+      <div class="card orange"><div class="name">Mozambique <span class="level">Orange</span></div><div class="drivers">Parmi les tendances du FSI se détériorant le plus rapidement de la dernière décennie ; insurrection à Cabo Delgado.</div><div class="source">Données de tendance du FSI</div></div>
+    </div>
+  </div>
+
+  <div class="region">
+    <h2>Concentrations d'inégalité et de crime organisé (transversal)</h2>
+    <div class="grid">
+      <div class="card orange"><div class="name">Afrique du Sud <span class="level">Orange</span></div><div class="drivers">Parmi les coefficients de Gini les plus élevés au monde ; score élevé à l'indice du crime organisé.</div><div class="source">Données de Gini de la Banque mondiale, Global Organized Crime Index</div></div>
+      <div class="card yellow"><div class="name">Brésil <span class="level">Jaune</span></div><div class="drivers">Forte inégalité et charge de violence criminelle urbaine, sans les indicateurs aigus de fragilité étatique ci-dessus.</div><div class="source">Données de Gini de la Banque mondiale, Global Organized Crime Index</div></div>
+      <div class="card yellow"><div class="name">Mexique <span class="level">Jaune</span></div><div class="drivers">Violence persistante liée aux cartels, concentrée régionalement plutôt qu'à l'échelle nationale.</div><div class="source">Global Organized Crime Index</div></div>
+    </div>
+  </div>
+
+  <div class="foot">
+    <p><strong>Ce que ceci n'est pas :</strong> une source en temps réel. Comparez avec les sources en direct de la sous-page des cartes — la carte de chaleur du Fragile States Index, ACLED, FEWS NET/IPC, le Global Peace Index, le Global Organized Crime Index — pour toute donnée actuelle ou pertinente pour une décision.</p>
+    <p><strong>Lacunes de couverture :</strong> cet instantané privilégie les pays apparaissant près du sommet d'au moins un indice majeur ; de nombreux pays présentant une instabilité modérée, sans gros titres, ne figurent pas dans la liste et ne doivent pas être interprétés comme « stables » par omission.</p>
+    <p><strong>Sur les cas contestés :</strong> les entrées ici (p. ex. Gaza/Palestine, Myanmar, Éthiopie) reflètent ce que rapportent les indices cités, non une position politique — consultez la source primaire si un classement doit être utilisé pour quelque chose de conséquent.</p>
+  </div>
+  <div class="foot">
+    <p>Sous licence <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener">CC BY 4.0</a> — voir LICENSE-fr.html (dans le dossier du projet) pour savoir ce qu'elle couvre. Les données sous-jacentes de tiers (indices, rapports de l'OMS/ONU, etc.) conservent leur propre licence/droit d'auteur.</p>
+  </div>
+
+</div>
+</body>
+</html>

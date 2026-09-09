@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Social Instability Maps by Problem Type</title>
+<style>
+  :root{
+    --ink:#1c1a17;
+    --paper:#faf7f2;
+    --line:#d8d2c6;
+    --red:#b3261e;
+    --red-bg:#f8e4e2;
+    --orange:#a9631a;
+    --orange-bg:#f6e9d6;
+    --yellow:#8a7215;
+    --yellow-bg:#f5f0d8;
+    --muted:#6b675f;
+    --tab-bg:#eee8db;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family: Georgia, 'Iowan Old Style', serif;
+    line-height:1.5;
+    padding:2.5rem 1.5rem 4rem;
+  }
+  .wrap{max-width:960px;margin:0 auto;}
+  h1{font-size:1.9rem;margin:0 0 0.3rem;font-weight:600;}
+  .sub{color:var(--muted);font-size:1rem;max-width:70ch;margin:0 0 1.6rem;}
+
+  .tabs{
+    display:flex;
+    flex-wrap:wrap;
+    gap:0.4rem;
+    border-bottom:2px solid var(--line);
+    margin-bottom:1.6rem;
+  }
+  .tab-btn{
+    font-family:inherit;
+    font-size:0.92rem;
+    padding:0.55rem 1rem;
+    background:var(--tab-bg);
+    border:1px solid var(--line);
+    border-bottom:none;
+    border-radius:5px 5px 0 0;
+    cursor:pointer;
+    color:var(--ink);
+    margin-bottom:-2px;
+  }
+  .tab-btn.active{
+    background:var(--paper);
+    border-bottom:2px solid var(--paper);
+    font-weight:700;
+  }
+  .panel{display:none;}
+  .panel.active{display:block;}
+
+  .methodology{
+    border:1px solid var(--line);
+    background:#fff;
+    border-radius:4px;
+    padding:0.9rem 1.1rem;
+    font-size:0.88rem;
+    color:#3a3730;
+    margin-bottom:1.4rem;
+  }
+  .methodology p{margin:0.35rem 0;}
+  .legend{
+    display:flex;
+    gap:1.3rem;
+    flex-wrap:wrap;
+    margin:0 0 1.4rem;
+    font-size:0.88rem;
+  }
+  .legend span{display:inline-flex;align-items:center;gap:0.45rem;}
+  .dot{width:11px;height:11px;border-radius:50%;display:inline-block;}
+  .dot.red{background:var(--red);}
+  .dot.orange{background:var(--orange);}
+  .dot.yellow{background:var(--yellow);}
+
+  .grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill,minmax(250px,1fr));
+    gap:0.65rem;
+  }
+  .card{border-radius:4px;padding:0.7rem 0.85rem;border:1px solid transparent;}
+  .card.red{background:var(--red-bg); border-color:#e3b7b2;}
+  .card.orange{background:var(--orange-bg); border-color:#e0c193;}
+  .card.yellow{background:var(--yellow-bg); border-color:#dcd08f;}
+  .card .name{font-weight:700;font-size:0.98rem;display:flex;justify-content:space-between;align-items:baseline;}
+  .card .level{font-size:0.7rem;text-transform:uppercase;letter-spacing:0.03em;font-weight:600;}
+  .card.red .level{color:var(--red);}
+  .card.orange .level{color:var(--orange);}
+  .card.yellow .level{color:var(--yellow);}
+  .card .drivers{font-size:0.84rem;color:#4a473f;margin-top:0.2rem;}
+  .card .drivers:has(strong){background:rgba(0,0,0,0.035);border-radius:3px;padding:0.4rem 0.5rem;margin-top:0.4rem;}
+  .card .source{font-size:0.74rem;color:var(--muted);margin-top:0.3rem;font-style:italic;}
+  .card .source a{color:var(--muted);text-decoration:underline;font-style:italic;}
+  .card .source a:hover{color:var(--accent, #a9631a);}
+
+  .foot{margin-top:2rem;padding-top:1rem;border-top:1px solid var(--line);font-size:0.84rem;color:var(--muted);}
+  .foot p{margin:0.4rem 0;}
+</style>
+</head>
+<body>
+<div class="nav" style="background:#2b2a26; color:#e8e3d8; padding:0.9rem 1.5rem; display:flex; flex-wrap:wrap; gap:0.3rem 1rem; font-family:Georgia,serif; font-size:0.88rem;">
+  <a class="home" style="color:#e8e3d8; text-decoration:none; font-weight:700;" href="index-en.html">Home</a>
+  <a style="color:#e8e3d8; text-decoration:none; opacity:0.85;" href="sociology-websites-directory-en.html">Sociology Directory</a>
+  <a style="color:#e8e3d8; text-decoration:none; opacity:0.85;" href="social-problems-current-events-links-en.html">Current Events</a>
+  <a style="color:#e8e3d8; text-decoration:none; opacity:0.85;" href="social-instability-maps-links-en.html">Map Links</a>
+  <a style="color:#e8e3d8; text-decoration:none; opacity:0.85;" href="social-instability-heat-map-en.html">Heat Map</a>
+  <a style="color:#e8e3d8; text-decoration:none; opacity:0.85;" href="social-instability-maps-by-type-en.html">Maps by Type</a>
+  <a style="color:#e8e3d8; text-decoration:none; opacity:0.85;" href="key-contributors-social-problems-en.html">Contributors</a>
+  <a style="color:#e8e3d8; text-decoration:none; opacity:0.85;" href="theoretical-sociologists-philosophers-en.html">Theorists</a>
+  <a style="color:#e8e3d8; text-decoration:none; opacity:0.85;" href="sociology-sponsors-power-control-en.html">Power & Sponsors</a>
+  <a style="color:#e8e3d8; text-decoration:none; opacity:0.85;" href="selected-works-by-contributor-en.html">Works</a>
+  <a style="color:#e8e3d8; text-decoration:none; opacity:0.85;" href="LICENSE-en.html">License</a>
+</div>
+<div class="wrap">
+
+  <h1>Social Instability Maps, by Problem Type</h1>
+  <p class="sub">Twelve separate maps — one per dimension — rather than a single combined score, since a country can rank severely on one axis (e.g. organized crime) while being unremarkable on another (e.g. famine risk). Each tab uses that dimension's own published metric and its own color thresholds.</p>
+
+  <p class="why-maps">Mapping the social world does something a table of numbers can't: it reveals spatial relationships — clustering, contagion, and proximity — that shape social problems as much as any single country's own statistics do. A famine or a conflict rarely stays within one border; it moves across neighboring territory, along trade routes, or through a river basin, and a map makes that adjacency visible in a way an ordered list never will. Geography also carries explanatory weight of its own: coastlines, chokepoints like the Strait of Hormuz, mountain ranges that shelter insurgencies, or the pull of a regional labor market all help explain <em>why</em> instability concentrates where it does, not just <em>that</em> it does. And since most of the crises mapped here are compound — a country in conflict often also faces famine, disease, and displacement at the same time — seeing them overlaid geographically, rather than buried in separate tables, is what makes that pileup visible. That's the working assumption behind treating each dimension as its own map instead of a single composite score: a problem's geography is often as informative as its severity.</p>
+
+  <div class="freshness">
+    <p class="freshness-title">Data as of September 2026 — this is a static snapshot, not a live source</p>
+    <p class="sources-note">This page will be updated periodically. The linked pages — including the "Live dashboard" link at the top of each map's methodology box — have their own updating process and you should check them manually for their most current state.</p>
+    <table class="cadence-table">
+      <tr><th>Map</th><th>Native update cadence</th></tr>
+      <tr><td>Armed Conflict / War</td><td>ACLED: near-daily · Fragile States Index: annual</td></tr>
+      <tr><td>Famine / Food Insecurity</td><td>FEWS NET / IPC: monthly · Hunger Hotspots: ~2x/year</td></tr>
+      <tr><td>Economic Inequality</td><td>Gini data: irregular, tied to national household surveys (often 1-3 years old)</td></tr>
+      <tr><td>Criminal Violence / Organized Crime</td><td>Global Organized Crime Index: ~every 2 years</td></tr>
+      <tr><td>Disease / Epidemic Outbreaks</td><td>WHO cholera: monthly · PHEIC status: as declared</td></tr>
+      <tr><td>Corruption</td><td>Transparency International CPI: annual</td></tr>
+      <tr><td>Drug Production / Trafficking</td><td>UNODC World Drug Report: annual</td></tr>
+      <tr><td>Violence Against Women</td><td>UN Women femicide report: annual · Lancet IPV prevalence study: infrequent, multi-year</td></tr>
+      <tr><td>Violence Against Minorities</td><td>EU FRA Roma survey: ~every 3 years · Global Witness: annual</td></tr>
+      <tr><td>Press Freedom</td><td>CPJ killings: continuous · CPJ prison census: annual</td></tr>
+      <tr><td>Economic Migration</td><td>IOM World Migration Report: every 2 years · national statistics offices: annual</td></tr>
+      <tr><td>Religious Freedom / Persecution</td><td>Open Doors World Watch List: annual · USCIRF Annual Report: annual</td></tr>
+    </table>
+  </div>
+
+  <div class="tabs">
+    <button class="tab-btn active" data-tab="conflict">Armed Conflict / War</button>
+    <button class="tab-btn" data-tab="famine">Famine / Food Insecurity</button>
+    <button class="tab-btn" data-tab="inequality">Economic Inequality</button>
+    <button class="tab-btn" data-tab="crime">Criminal Violence / Organized Crime</button>
+    <button class="tab-btn" data-tab="disease">Disease / Epidemic Outbreaks</button>
+    <button class="tab-btn" data-tab="corruption">Corruption</button>
+    <button class="tab-btn" data-tab="drugs">Drug Production / Trafficking</button>
+    <button class="tab-btn" data-tab="vaw">Violence Against Women</button>
+    <button class="tab-btn" data-tab="minorities">Violence Against Minorities</button>
+    <button class="tab-btn" data-tab="press">Press Freedom</button>
+    <button class="tab-btn" data-tab="econmig">Economic Migration</button>
+    <button class="tab-btn" data-tab="religion">Religious Freedom / Persecution</button>
+  </div>
+
+  <!-- CONFLICT -->
+  <div class="panel active" id="conflict">
+    <div class="methodology">
+      <p><a class="live-link" href="https://acleddata.com/" target="_blank" rel="noopener">📡 Live dashboard / current data</a><br><strong>Metric:</strong> active armed-conflict status and fragility score, drawn from the security-apparatus component of the Fragile States Index 2024/25 (Fund for Peace) and ongoing conflict monitoring / the ACLED Conflict Watchlist.</p>
+      <p><strong>Red</strong> = large-scale war or active ongoing civil war. <strong>Orange</strong> = active insurgency, militia conflict, or high-risk post-conflict fragility. <strong>Yellow</strong> = elevated risk of political violence without a currently active large-scale war.</p>
+    </div>
+    <div class="legend">
+      <span><span class="dot red"></span>Active large-scale war</span>
+      <span><span class="dot orange"></span>Active insurgency / militia conflict</span>
+      <span><span class="dot yellow"></span>Elevated risk, no current war</span>
+    </div>
+    <div class="grid">
+      <div class="card red"><div class="name">Sudan <span class="level">Red</span></div><div class="drivers">SAF vs. RSF civil war, ongoing since 2023; non-Arab communities in Darfur suffer atrocities the Global Centre for R2P says could constitute genocide.</div><div class="drivers"><strong>Official position:</strong> the RSF deny committing genocide or systematically targeting non-Arab groups, framing the conflict as a power struggle with the SAF. <strong>Disputed by:</strong> the Global Centre for R2P, satellite-imagery analysis showing mass graves, and Sudanese Darfuri advocacy groups documenting house-by-house killings.</div><div class="source"><a href="https://acleddata.com/" target="_blank" rel="noopener">ACLED</a>, <a href="https://fragilestatesindex.org/analytics/fsi-heat-map/" target="_blank" rel="noopener">FSI 2024/25</a>, <a href="https://www.globalr2p.org/" target="_blank" rel="noopener">Global Centre for R2P</a> July 2026</div></div>
+      <div class="card red"><div class="name">Ukraine <span class="level">Red</span></div><div class="drivers">Large-scale war with Russia, ongoing since 2022.</div><div class="drivers"><strong>Official position:</strong> Russia calls the invasion a "special military operation" justified by NATO expansion and claims of protecting Russian speakers in Ukraine. <strong>Disputed by:</strong> Ukraine, most UN member states, and the ICC (which has issued an arrest warrant for the Russian president), who characterize it as an unprovoked war of aggression.</div><div class="source"><a href="https://acleddata.com/" target="_blank" rel="noopener">ACLED</a>, <a href="https://www.cfr.org/global-conflict-tracker" target="_blank" rel="noopener">CFR Conflict Tracker</a></div></div>
+      <div class="card red"><div class="name">Myanmar <span class="level">Red</span></div><div class="drivers">Multi-front civil war since the 2021 coup.</div><div class="source"><a href="https://acleddata.com/" target="_blank" rel="noopener">ACLED</a>, <a href="https://fragilestatesindex.org/analytics/fsi-heat-map/" target="_blank" rel="noopener">FSI 2024/25</a></div></div>
+      <div class="card red"><div class="name">Gaza / Palestine <span class="level">Red</span></div><div class="drivers">Active war and blockade-derived crisis.</div><div class="drivers"><strong>Official position:</strong> Israel states its military campaign targets Hamas and is conducted in self-defense following the October 7, 2023 attack, and disputes characterizations of the war as disproportionate or deliberately targeting civilians. <strong>Disputed by:</strong> the ICJ (which found a plausible risk of genocide in a provisional ruling), the ICC (which issued arrest warrants), and human rights organizations citing the civilian death toll and humanitarian conditions documented elsewhere on this page.</div><div class="source"><a href="https://www.cfr.org/global-conflict-tracker" target="_blank" rel="noopener">CFR Conflict Tracker</a></div></div>
+      <div class="card red"><div class="name">Yemen <span class="level">Red</span></div><div class="drivers">Prolonged civil war, fragile ceasefire dynamics.</div><div class="source"><a href="https://fragilestatesindex.org/analytics/fsi-heat-map/" target="_blank" rel="noopener">FSI 2024/25</a>, <a href="https://acleddata.com/" target="_blank" rel="noopener">ACLED</a></div></div>
+      <div class="card red"><div class="name">DR Congo <span class="level">Red</span></div><div class="drivers">M23 offensive in the east, mass displacement.</div><div class="source"><a href="https://acleddata.com/" target="_blank" rel="noopener">ACLED</a>, <a href="https://fragilestatesindex.org/analytics/fsi-heat-map/" target="_blank" rel="noopener">FSI 2024/25</a></div></div>
+      <div class="card orange"><div class="name">Mali, Niger, and Burkina Faso <span class="level">Orange</span></div><div class="drivers">Sahel jihadist insurgency belt.</div><div class="source"><a href="https://acleddata.com/series/conflict-watchlist-2026" target="_blank" rel="noopener">ACLED Conflict Watchlist</a></div></div>
+      <div class="card orange"><div class="name">Nigeria (northeast) <span class="level">Orange</span></div><div class="drivers">Boko Haram / ISWAP insurgency.</div><div class="source"><a href="https://acleddata.com/" target="_blank" rel="noopener">ACLED</a></div></div>
+      <div class="card orange"><div class="name">Syria <span class="level">Orange</span></div><div class="drivers">Post-transition instability, localized clashes (2025-26).</div><div class="source"><a href="https://acleddata.com/" target="_blank" rel="noopener">ACLED regional monitoring</a></div></div>
+      <div class="card orange"><div class="name">Central African Republic <span class="level">Orange</span></div><div class="drivers">Fragmented armed-group control persists.</div><div class="source"><a href="https://fragilestatesindex.org/analytics/fsi-heat-map/" target="_blank" rel="noopener">FSI 2024/25</a></div></div>
+      <div class="card orange"><div class="name">Somalia <span class="level">Orange</span></div><div class="drivers">Ongoing Al-Shabaab insurgency.</div><div class="source"><a href="https://acleddata.com/" target="_blank" rel="noopener">ACLED</a>, <a href="https://fragilestatesindex.org/analytics/fsi-heat-map/" target="_blank" rel="noopener">FSI 2024/25</a></div></div>
+      <div class="card yellow"><div class="name">Iran <span class="level">Yellow</span></div><div class="drivers">Risk of involvement/escalation in the 2026 regional war.</div><div class="source"><a href="https://acleddata.com/" target="_blank" rel="noopener">ACLED regional monitoring</a></div></div>
+      <div class="card yellow"><div class="name">Pakistan <span class="level">Yellow</span></div><div class="drivers">Periodic militant attacks, border tension with Afghanistan.</div><div class="source"><a href="https://fragilestatesindex.org/analytics/fsi-heat-map/" target="_blank" rel="noopener">FSI 2024/25</a></div></div>
+      <div class="card yellow"><div class="name">Colombia <span class="level">Yellow</span></div><div class="drivers">Residual armed-group activity after the peace process.</div><div class="source"><a href="https://acleddata.com/" target="_blank" rel="noopener">ACLED regional monitoring</a></div></div>
+    </div>
+  </div>
+
+  <!-- FAMINE -->
+  <div class="panel" id="famine">
+    <div class="methodology">
+      <p><a class="live-link" href="https://fews.net/" target="_blank" rel="noopener">📡 Live dashboard / current data</a><br><strong>Metric:</strong> the Integrated Food Security Phase Classification (IPC), the technical standard used by FEWS NET and the FAO/WFP Hunger Hotspots reports.</p>
+      <p><strong>Red</strong> = confirmed Famine or Catastrophe (IPC Phase 5) present. <strong>Orange</strong> = Emergency (IPC Phase 4) / "highest concern" hunger-hotspot rating. <strong>Yellow</strong> = "very high concern" level — serious but one step below widespread emergency.</p>
+    </div>
+    <div class="legend">
+      <span><span class="dot red"></span>Famine / Catastrophe (IPC 5)</span>
+      <span><span class="dot orange"></span>Emergency (IPC 4) — highest concern</span>
+      <span><span class="dot yellow"></span>Very high concern</span>
+    </div>
+    <div class="grid">
+      <div class="card red"><div class="name">Sudan <span class="level">Red</span></div><div class="drivers">Confirmed famine in El Fasher and Kadugli (2025); ~135,000 people in Catastrophe as of 2026.</div><div class="source">IPC Famine Review Sept. 2025, FEWS NET Feb. 2026</div></div>
+      <div class="card red"><div class="name">Gaza / Palestine <span class="level">Red</span></div><div class="drivers">Confirmed famine in 2025; "highly fragile" conditions into 2026.</div><div class="source">IPC Famine Facts</div></div>
+      <div class="card orange"><div class="name">South Sudan <span class="level">Orange</span></div><div class="drivers">57% of the population in high acute food insecurity; famine risk in Upper Nile.</div><div class="source">Hunger Hotspots 2026, GRFC 2026</div></div>
+      <div class="card orange"><div class="name">Yemen <span class="level">Orange</span></div><div class="drivers">52% of the population in high acute food insecurity; highest-concern level.</div><div class="source">Hunger Hotspots 2026</div></div>
+      <div class="card orange"><div class="name">Nigeria <span class="level">Orange</span></div><div class="drivers">Highest-concern level in Hunger Hotspots 2026.</div><div class="source">Hunger Hotspots 2026</div></div>
+      <div class="card orange"><div class="name">Somalia <span class="level">Orange</span></div><div class="drivers">Highest-concern level; recurring drought and conflict compounding each other.</div><div class="source">Hunger Hotspots 2026</div></div>
+      <div class="card yellow"><div class="name">Afghanistan <span class="level">Yellow</span></div><div class="drivers">"Very high concern" level.</div><div class="source">Hunger Hotspots 2026</div></div>
+      <div class="card yellow"><div class="name">DR Congo <span class="level">Yellow</span></div><div class="drivers">"Very high concern" level amid conflict in the east.</div><div class="source">Hunger Hotspots 2026</div></div>
+      <div class="card yellow"><div class="name">Haiti <span class="level">Yellow</span></div><div class="drivers">"Very high concern" level; gang control disrupts food access.</div><div class="source">Hunger Hotspots 2026</div></div>
+    </div>
+  </div>
+
+  <!-- INEQUALITY -->
+  <div class="panel" id="inequality">
+    <div class="methodology">
+      <p><a class="live-link" href="https://wid.world/world/" target="_blank" rel="noopener">📡 Live dashboard / current data</a><br><strong>Metric:</strong> World Bank Gini Index (income), the most recent available survey year per country. The World Bank itself flags a Gini &gt; 40 as its "high inequality" threshold.</p>
+      <p><strong>Red</strong> = Gini ≥ 50 (extreme income concentration). <strong>Orange</strong> = Gini 45–49.9 (high inequality). <strong>Yellow</strong> = Gini 40–44.9 (above the World Bank's high-inequality threshold).</p>
+    </div>
+    <div class="legend">
+      <span><span class="dot red"></span>Gini ≥ 50</span>
+      <span><span class="dot orange"></span>Gini 45–49.9</span>
+      <span><span class="dot yellow"></span>Gini 40–44.9</span>
+    </div>
+    <div class="grid">
+      <div class="card red"><div class="name">South Africa <span class="level">Red</span></div><div class="drivers">Gini ≈ 54–63 depending on survey/year — persistently the world's highest.</div><div class="source">World Bank, UBS Global Wealth Report</div></div>
+      <div class="card red"><div class="name">Colombia <span class="level">Red</span></div><div class="drivers">Gini ≈ 54.4 (2024) — the highest in Latin America.</div><div class="source">World Bank</div></div>
+      <div class="card red"><div class="name">Namibia and Eswatini <span class="level">Red</span></div><div class="drivers">Gini between 50 and 60, in the mid-high range.</div><div class="source">World Bank</div></div>
+      <div class="card red"><div class="name">Zambia <span class="level">Red</span></div><div class="drivers">Gini ≈ 51.5.</div><div class="source">World Bank</div></div>
+      <div class="card red"><div class="name">Brazil <span class="level">Red</span></div><div class="drivers">Gini ≈ 50.3–52.</div><div class="source">World Bank</div></div>
+      <div class="card orange"><div class="name">Panama <span class="level">Orange</span></div><div class="drivers">Gini ≈ 49.7.</div><div class="source">World Bank</div></div>
+      <div class="card orange"><div class="name">Mozambique <span class="level">Orange</span></div><div class="drivers">Gini ≈ 49.6.</div><div class="source">World Bank</div></div>
+      <div class="card orange"><div class="name">Ecuador <span class="level">Orange</span></div><div class="drivers">Gini ≈ 45.9.</div><div class="source">World Bank</div></div>
+      <div class="card orange"><div class="name">Honduras <span class="level">Orange</span></div><div class="drivers">Gini ≈ 45.7.</div><div class="source">World Bank</div></div>
+      <div class="card orange"><div class="name">Costa Rica and Guatemala <span class="level">Orange</span></div><div class="drivers">Gini ≈ 45.2–45.5.</div><div class="source">World Bank</div></div>
+      <div class="card yellow"><div class="name">Turkey <span class="level">Yellow</span></div><div class="drivers">Gini ≈ 43.7.</div><div class="source">World Bank</div></div>
+      <div class="card yellow"><div class="name">Chile <span class="level">Yellow</span></div><div class="drivers">Gini ≈ 43.0.</div><div class="source">World Bank</div></div>
+      <div class="card yellow"><div class="name">Mexico <span class="level">Yellow</span></div><div class="drivers">Gini ≈ 42.6.</div><div class="source">World Bank</div></div>
+      <div class="card yellow"><div class="name">United States <span class="level">Yellow</span></div><div class="drivers">Gini ≈ 41.8, the highest among G7 economies.</div><div class="source">World Bank</div></div>
+    </div>
+  </div>
+
+  <!-- CRIME -->
+  <div class="panel" id="crime">
+    <div class="methodology">
+      <p><a class="live-link" href="https://ocindex.net/" target="_blank" rel="noopener">📡 Live dashboard / current data</a><br><strong>Metric:</strong> Global Organized Crime Index (Global Initiative Against Transnational Organized Crime), criminality score 0 to 10, most recent edition (2023).</p>
+      <p><strong>Red</strong> = criminality score ≥ 7.5 (the world's highest concentrations). <strong>Orange</strong> = 6.5–7.49. <strong>Yellow</strong> = 6.0–6.49 — elevated but outside the top tier worldwide.</p>
+    </div>
+    <div class="legend">
+      <span><span class="dot red"></span>Criminality score ≥ 7.5</span>
+      <span><span class="dot orange"></span>6.5–7.49</span>
+      <span><span class="dot yellow"></span>6.0–6.49</span>
+    </div>
+    <div class="grid">
+      <div class="card red"><div class="name">Myanmar <span class="level">Red</span></div><div class="drivers">Score 8.15 — the world's highest; trafficking, arms, scam-compound economies.</div><div class="source">Global Organized Crime Index 2023</div></div>
+      <div class="card red"><div class="name">Colombia <span class="level">Red</span></div><div class="drivers">Score 7.75; the heartland of drug trafficking.</div><div class="source">Global Organized Crime Index 2023</div></div>
+      <div class="card red"><div class="name">Mexico <span class="level">Red</span></div><div class="drivers">Score ≈ 7.7; cartel-driven violence.</div><div class="source">Global Organized Crime Index 2023</div></div>
+      <div class="card orange"><div class="name">Paraguay <span class="level">Orange</span></div><div class="drivers">A regional trafficking hub.</div><div class="source">Global Organized Crime Index 2023</div></div>
+      <div class="card orange"><div class="name">Ecuador <span class="level">Orange</span></div><div class="drivers">Sharp recent rise in organized-crime violence.</div><div class="source">Global Organized Crime Index 2023</div></div>
+      <div class="card orange"><div class="name">DR Congo <span class="level">Orange</span></div><div class="drivers">Conflict-linked resource trafficking.</div><div class="source">Global Organized Crime Index 2023</div></div>
+      <div class="card orange"><div class="name">South Africa <span class="level">Orange</span></div><div class="drivers">High score in both criminality and (separately) inequality.</div><div class="source">Global Organized Crime Index 2023</div></div>
+      <div class="card orange"><div class="name">Nigeria <span class="level">Orange</span></div><div class="drivers">Trafficking and cybercrime networks.</div><div class="source">Global Organized Crime Index 2023</div></div>
+      <div class="card yellow"><div class="name">Lebanon <span class="level">Yellow</span></div><div class="drivers">Smuggling economy amid state collapse.</div><div class="source">Global Organized Crime Index 2023</div></div>
+      <div class="card yellow"><div class="name">Turkey <span class="level">Yellow</span></div><div class="drivers">A transit hub for trafficking routes.</div><div class="source">Global Organized Crime Index 2023</div></div>
+      <div class="card yellow"><div class="name">Honduras and El Salvador <span class="level">Yellow</span></div><div class="drivers">Historically high gang violence; El Salvador's score is shifting following its state-of-emergency policy.</div><div class="source">Global Organized Crime Index 2023</div></div>
+    </div>
+  </div>
+
+  <!-- DISEASE -->
+  <div class="panel" id="disease">
+    <div class="methodology">
+      <p><a class="live-link" href="https://www.who.int/emergencies/disease-outbreak-news" target="_blank" rel="noopener">📡 Live dashboard / current data</a><br><strong>Metric:</strong> active outbreak status reported by WHO/ECDC — PHEIC (Public Health Emergency of International Concern) declarations, WHO multi-country cholera epidemiological updates, and outbreak case/death counts as of mid-2026.</p>
+      <p><strong>Red</strong> = PHEIC-declared epidemic or "very high"/peak case-count outbreak status per WHO. <strong>Orange</strong> = large, sustained active outbreak reported in WHO's monthly updates. <strong>Yellow</strong> = a present, reported outbreak, smaller in scale or more contained.</p>
+    </div>
+    <div class="legend">
+      <span><span class="dot red"></span>PHEIC or active outbreak at peak severity</span>
+      <span><span class="dot orange"></span>Large, sustained active outbreak</span>
+      <span><span class="dot yellow"></span>Active outbreak, minor/contained</span>
+    </div>
+    <div class="grid">
+      <div class="card red"><div class="name">DR Congo <span class="level">Red</span></div><div class="drivers">2026 Ebola epidemic declared a PHEIC (May 2026); also among the highest cholera death tolls worldwide (nearly 700 deaths, 2026).</div><div class="source">WHO PHEIC declaration, WHO cholera update Aug. 2026</div></div>
+      <div class="card red"><div class="name">Nigeria <span class="level">Red</span></div><div class="drivers">The largest active cholera outbreak by case count (50,000+ cases, 338+ deaths in 2026), concentrated in Borno state.</div><div class="source">WHO/UNICEF cholera update, Aug. 2026</div></div>
+      <div class="card red"><div class="name">Sudan <span class="level">Red</span></div><div class="drivers">A cholera outbreak compounding the war and famine; ~80% of health facilities are non-functional.</div><div class="source">WHO cholera situation reports 2025–26</div></div>
+      <div class="card orange"><div class="name">Yemen <span class="level">Orange</span></div><div class="drivers">Recurring large-scale cholera outbreaks amid collapsed health infrastructure.</div><div class="source">WHO cholera updates 2025–26</div></div>
+      <div class="card orange"><div class="name">Afghanistan <span class="level">Orange</span></div><div class="drivers">Among the highest cholera/AWD case counts in the Eastern Mediterranean Region.</div><div class="source">WHO cholera update, June 2026</div></div>
+      <div class="card orange"><div class="name">South Sudan <span class="level">Orange</span></div><div class="drivers">High, sustained cholera case counts through 2025–26.</div><div class="source">WHO cholera updates 2025–26</div></div>
+      <div class="card orange"><div class="name">Chad, Cameroon, and Central African Republic <span class="level">Orange</span></div><div class="drivers">Cross-border cholera corridor around Lake Chad; children are disproportionately affected.</div><div class="source">UNICEF/WHO, Aug. 2026</div></div>
+      <div class="card yellow"><div class="name">Angola, Mozambique, and Somalia <span class="level">Yellow</span></div><div class="drivers">Active but smaller-scale cholera outbreaks reported through 2026.</div><div class="source">WHO/ECDC monthly cholera updates</div></div>
+      <div class="card yellow"><div class="name">Myanmar and Pakistan <span class="level">Yellow</span></div><div class="drivers">Recurring cholera cases reported at lower case counts.</div><div class="source">WHO/ECDC monthly cholera updates</div></div>
+      <div class="card yellow"><div class="name">Uganda <span class="level">Yellow</span></div><div class="drivers">Secondary Ebola cases linked to the 2026 DR Congo outbreak.</div><div class="source">WHO PHEIC situation reports</div></div>
+    </div>
+  </div>
+
+  <!-- CORRUPTION -->
+  <div class="panel" id="corruption">
+    <div class="methodology">
+      <p><a class="live-link" href="https://www.transparency.org/en/cpi/2025" target="_blank" rel="noopener">📡 Live dashboard / current data</a><br><strong>Metric:</strong> Transparency International's 2025 Corruption Perceptions Index (CPI), from 0 (highly corrupt) to 100 (very clean), 182 countries assessed. The global average fell to 42 in 2025, a new low.</p>
+      <p><strong>Red</strong> = CPI score ≤ 20 (the level perceived as the world's most corrupt). <strong>Orange</strong> = CPI 21–30. <strong>Yellow</strong> = CPI 31–40 — below the "serious corruption problem" threshold of 50, but outside the worst tier.</p>
+    </div>
+    <div class="legend">
+      <span><span class="dot red"></span>CPI ≤ 20</span>
+      <span><span class="dot orange"></span>CPI 21–30</span>
+      <span><span class="dot yellow"></span>CPI 31–40</span>
+    </div>
+    <div class="grid">
+      <div class="card red"><div class="name">Somalia and South Sudan <span class="level">Red</span></div><div class="drivers">CPI 9 — tied for the world's lowest.</div><div class="source">Transparency International CPI 2025</div></div>
+      <div class="card red"><div class="name">Venezuela <span class="level">Red</span></div><div class="drivers">CPI 10.</div><div class="source">Transparency International CPI 2025</div></div>
+      <div class="card red"><div class="name">Yemen, Libya, and Eritrea <span class="level">Red</span></div><div class="drivers">CPI 13 each.</div><div class="source">Transparency International CPI 2025</div></div>
+      <div class="card red"><div class="name">Sudan and Nicaragua <span class="level">Red</span></div><div class="drivers">CPI 14 each.</div><div class="source">Transparency International CPI 2025</div></div>
+      <div class="card red"><div class="name">Syria and Equatorial Guinea <span class="level">Red</span></div><div class="drivers">CPI 15 each.</div><div class="source">Transparency International CPI 2025</div></div>
+      <div class="card red"><div class="name">Haiti and North Korea <span class="level">Red</span></div><div class="drivers">CPI 16 and 15 respectively.</div><div class="source">Transparency International CPI 2025</div></div>
+      <div class="card orange"><div class="name">Chad and Honduras <span class="level">Orange</span></div><div class="drivers">CPI 22 each.</div><div class="source">Transparency International CPI 2025</div></div>
+      <div class="card orange"><div class="name">Congo (Rep.) and Eswatini <span class="level">Orange</span></div><div class="drivers">CPI 23 each.</div><div class="source">Transparency International CPI 2025</div></div>
+      <div class="card orange"><div class="name">Iran and Lebanon <span class="level">Orange</span></div><div class="drivers">CPI 23 each.</div><div class="source">Transparency International CPI 2025</div></div>
+      <div class="card orange"><div class="name">Paraguay <span class="level">Orange</span></div><div class="drivers">CPI 24.</div><div class="source">Transparency International CPI 2025</div></div>
+      <div class="card orange"><div class="name">Russia and Belarus <span class="level">Orange</span></div><div class="drivers">CPI 22 and 31 respectively.</div><div class="source">Transparency International CPI 2025</div></div>
+      <div class="card yellow"><div class="name">Iraq, Bolivia, and Liberia <span class="level">Yellow</span></div><div class="drivers">CPI 28 each — just outside the "orange" band but persistently weak.</div><div class="source">Transparency International CPI 2025</div></div>
+      <div class="card yellow"><div class="name">Mexico and Guatemala <span class="level">Yellow</span></div><div class="drivers">CPI 27 and 26 respectively.</div><div class="source">Transparency International CPI 2025</div></div>
+      <div class="card yellow"><div class="name">Nigeria and Cameroon <span class="level">Yellow</span></div><div class="drivers">CPI 26 each.</div><div class="source">Transparency International CPI 2025</div></div>
+      <div class="card yellow"><div class="name">Angola and Philippines <span class="level">Yellow</span></div><div class="drivers">CPI 32 each.</div><div class="source">Transparency International CPI 2025</div></div>
+    </div>
+  </div>
+
+  <!-- DRUGS -->
+  <div class="panel" id="drugs">
+    <div class="methodology">
+      <p><a class="live-link" href="https://www.unodc.org/unodc/en/data-and-analysis/index.html" target="_blank" rel="noopener">📡 Live dashboard / current data</a><br><strong>Metric:</strong> UNODC's 2025 World Drug Report and Illicit Crop Monitoring Programme — measured by role in the global supply chain (cultivation/production vs. trafficking transit vs. primary consumer market), not just domestic consumption rates.</p>
+      <p><strong>Red</strong> = primary global source of a major illicit drug (coca, opium, or the dominant synthetic-drug manufacturing hub). <strong>Orange</strong> = a major trafficking transit hub or secondary producer. <strong>Yellow</strong> = a major consumer/destination market experiencing a sharp rise in use, seizures, or overdose deaths.</p>
+    </div>
+    <div class="legend">
+      <span><span class="dot red"></span>Primary global production source</span>
+      <span><span class="dot orange"></span>Major trafficking transit hub</span>
+      <span><span class="dot yellow"></span>Major consumer market, rising use/deaths</span>
+    </div>
+    <div class="grid">
+      <div class="card red"><div class="name">Colombia <span class="level">Red</span></div><div class="drivers">The world's dominant coca/cocaine producer; 2023 production rose ~50% on higher yields, pushing cocaine to a world-record 3,708 tonnes.</div><div class="source">UNODC World Drug Report 2025</div></div>
+      <div class="card red"><div class="name">Afghanistan <span class="level">Red</span></div><div class="drivers">Historically the world's dominant opium source; the 2022 cultivation ban disrupted production but large stockpiles remain.</div><div class="source">UNODC Afghanistan Opium Survey 2025</div></div>
+      <div class="card red"><div class="name">Myanmar <span class="level">Red</span></div><div class="drivers">A rising opium producer as Afghan production fell; also a major synthetic (ATS) manufacturing hub, feeding its #1 ranking on the organized-crime map.</div><div class="source">UNODC Myanmar Opium Survey 2025</div></div>
+      <div class="card orange"><div class="name">Peru and Bolivia <span class="level">Orange</span></div><div class="drivers">Secondary coca-producing countries, monitored alongside Colombia under UNODC's crop-survey program.</div><div class="source">UNODC Illicit Crop Monitoring Programme</div></div>
+      <div class="card orange"><div class="name">Mexico <span class="level">Orange</span></div><div class="drivers">A major opium/heroin producer and the primary trafficking route for synthetic opioids (fentanyl) into North America.</div><div class="source">UNODC World Drug Report 2025</div></div>
+      <div class="card orange"><div class="name">Ecuador <span class="level">Orange</span></div><div class="drivers">Emerged as a key cocaine-trafficking transit point, tracking its recent violence rise on the crime map.</div><div class="source">Global Organized Crime Index 2023</div></div>
+      <div class="card orange"><div class="name">Western Balkans (regional) <span class="level">Orange</span></div><div class="drivers">Organized-crime groups expanding influence over the European cocaine-trafficking market.</div><div class="source">UNODC World Drug Report 2025</div></div>
+      <div class="card orange"><div class="name">Nigeria <span class="level">Orange</span></div><div class="drivers">A monitored cannabis-cultivation source and a hub of non-medical tramadol use in West/Central Africa.</div><div class="source">UNODC Illicit Crop Monitoring Programme, 2025 Report</div></div>
+      <div class="card yellow"><div class="name">United States <span class="level">Yellow</span></div><div class="drivers">Primary destination for synthetic opioids; an ongoing overdose crisis despite a recent decline in related deaths.</div><div class="source">UNODC World Drug Report 2025</div></div>
+      <div class="card yellow"><div class="name">Western and Central Europe <span class="level">Yellow</span></div><div class="drivers">Now reporting more cocaine seizures than North America — the new primary destination market.</div><div class="source">UNODC World Drug Report 2025</div></div>
+    </div>
+  </div>
+
+  <!-- VAW -->
+  <div class="panel" id="vaw">
+    <div class="methodology">
+      <p><a class="live-link" href="https://www.unwomen.org/en/news-stories" target="_blank" rel="noopener">📡 Live dashboard / current data</a><br><strong>Metric:</strong> lifetime prevalence of physical and/or sexual intimate partner violence (IPV) among ever-partnered women aged 15-49, per WHO/Lancet global estimates, cross-referenced with the 2024 UN Women/UNODC femicide report for lethal outcomes.</p>
+      <p><strong>Red</strong> = lifetime IPV prevalence ≥ 45%. <strong>Orange</strong> = 35–44.9%. <strong>Yellow</strong> = 28–34.9% — still well above the global average of roughly one in three women.</p>
+    </div>
+    <div class="legend">
+      <span><span class="dot red"></span>Lifetime IPV prevalence ≥ 45%</span>
+      <span><span class="dot orange"></span>35–44.9%</span>
+      <span><span class="dot yellow"></span>28–34.9%</span>
+    </div>
+    <div class="grid">
+      <div class="card red"><div class="name">Kiribati <span class="level">Red</span></div><div class="drivers">53% lifetime prevalence — the highest measured worldwide.</div><div class="source">WHO/Lancet global IPV estimates</div></div>
+      <div class="card red"><div class="name">Fiji <span class="level">Red</span></div><div class="drivers">52% lifetime prevalence.</div><div class="source">WHO/Lancet global IPV estimates</div></div>
+      <div class="card red"><div class="name">Papua New Guinea <span class="level">Red</span></div><div class="drivers">51% lifetime prevalence; among the world's highest for both physical and sexual IPV.</div><div class="source">WHO/Lancet global IPV estimates</div></div>
+      <div class="card red"><div class="name">Bangladesh and Solomon Islands <span class="level">Red</span></div><div class="drivers">50% lifetime prevalence each.</div><div class="source">WHO/Lancet global IPV estimates</div></div>
+      <div class="card red"><div class="name">DR Congo and Vanuatu <span class="level">Red</span></div><div class="drivers">47% lifetime prevalence each; DRC also has the highest past-year IPV rate measured (36%).</div><div class="source">WHO/Lancet global IPV estimates</div></div>
+      <div class="card red"><div class="name">Afghanistan and Equatorial Guinea <span class="level">Red</span></div><div class="drivers">≈46% lifetime prevalence; Afghanistan also has the highest specifically for physical IPV (45.8%).</div><div class="source">WHO/Lancet global IPV estimates</div></div>
+      <div class="card orange"><div class="name">Cameroon <span class="level">Orange</span></div><div class="drivers">39% lifetime prevalence.</div><div class="source">WHO/Lancet global IPV estimates</div></div>
+      <div class="card orange"><div class="name">Peru, Rwanda, and Tanzania <span class="level">Orange</span></div><div class="drivers">38% lifetime prevalence each.</div><div class="source">WHO/Lancet global IPV estimates</div></div>
+      <div class="card orange"><div class="name">Ethiopia and Guinea <span class="level">Orange</span></div><div class="drivers">37% lifetime prevalence each.</div><div class="source">WHO/Lancet global IPV estimates</div></div>
+      <div class="card yellow"><div class="name">Sierra Leone <span class="level">Yellow</span></div><div class="drivers">36% lifetime prevalence.</div><div class="source">WHO/Lancet global IPV estimates</div></div>
+      <div class="card yellow"><div class="name">India and Zimbabwe <span class="level">Yellow</span></div><div class="drivers">35% lifetime prevalence each.</div><div class="source">WHO/Lancet global IPV estimates</div></div>
+      <div class="card yellow"><div class="name">Africa (regional femicide rate) <span class="level">Yellow</span></div><div class="drivers">The world's highest regional femicide rate, at 3 per 100,000 women — a lethal-outcome measure, distinct from the IPV prevalence above.</div><div class="source">UN Women/UNODC Femicide Report 2024</div></div>
+    </div>
+  </div>
+
+  <!-- MINORITIES -->
+  <div class="panel" id="minorities">
+    <div class="methodology">
+      <p><a class="live-link" href="https://globalwitness.org/en/campaigns/land-and-environmental-defenders/" target="_blank" rel="noopener">📡 Live dashboard / current data</a><br><strong>Scope:</strong> this map covers violence and systematic discrimination against <em>self-identified</em> national, ethnic, and indigenous minorities living within larger states — Roma, Kurds, indigenous peoples, Uyghurs, and similar groups — rather than general mass-atrocity/genocide situations (which often also involve majority populations, e.g. Sudan's civil war). Sources come from EU Fundamental Rights Agency (FRA) surveys of self-identified Roma/Traveller respondents, Global Witness's tracking of killings of indigenous land defenders, and national human-rights reports on named ethnic minorities (Kurds, Uyghurs, Rohingya).</p>
+      <p><strong>Red</strong> = documented killings/disappearances or systematic state persecution specifically targeting the group. <strong>Orange</strong> = high rates of hate-motivated violence or entrenched discrimination documented by survey data. <strong>Yellow</strong> = documented discrimination without the intensity seen in red/orange.</p>
+    </div>
+    <div class="legend">
+      <span><span class="dot red"></span>Killings/disappearances or systematic persecution</span>
+      <span><span class="dot orange"></span>High rates of hate-motivated violence (survey-documented)</span>
+      <span><span class="dot yellow"></span>Documented discrimination, lower intensity</span>
+    </div>
+    <div class="grid">
+      <div class="card red"><div class="name">China — Uyghurs <span class="level">Red</span></div><div class="drivers">Systematic persecution of Uyghur Muslims and other Turkic/Muslim minorities, assessed by R2P as possible crimes against humanity and genocide.</div><div class="drivers"><strong>Official position:</strong> the Chinese government calls the Xinjiang facilities "vocational education and training centers" aimed at counter-extremism and denies any persecution. <strong>Disputed by:</strong> R2P, USCIRF, and multiple UN human rights experts, who hold that the evidence points to mass detention and cultural suppression.</div><div class="source">Global Centre for R2P, July 2026</div></div>
+      <div class="card red"><div class="name">Myanmar — Rohingya <span class="level">Red</span></div><div class="drivers">Ongoing killings, arson, and displacement by both the junta and the Arakan Army; ~630,000 confined under apartheid-like restrictions.</div><div class="drivers"><strong>Official position:</strong> Myanmar's military government denies the Rohingya are a distinct ethnic group entitled to citizenship, calling them "Bengali" migrants, and disputes genocide characterizations of its 2016-17 operations. <strong>Disputed by:</strong> OHCHR, Genocide Watch, HRW, and the ICJ case brought by The Gambia, all of whom hold the evidence supports genocide or crimes against humanity.</div><div class="source">OHCHR Sept. 2026, Global Centre for R2P</div></div>
+      <div class="card red"><div class="name">Colombia — indigenous peoples <span class="level">Red</span></div><div class="drivers">The deadliest country for land/environmental defenders for the third year running (48 killed in 2024); indigenous peoples are among the hardest hit.</div><div class="source">Global Witness, Roots of Resistance 2025</div></div>
+      <div class="card red"><div class="name">Guatemala — indigenous peoples <span class="level">Red</span></div><div class="drivers">Killings of defenders (mostly indigenous) quintupled, from 4 (2023) to 20 (2024) — the highest per-capita rate in the world.</div><div class="source">Global Witness, Roots of Resistance 2025</div></div>
+      <div class="card red"><div class="name">Mexico — indigenous peoples <span class="level">Red</span></div><div class="drivers">18 defenders killed, 1 disappeared in 2024; many from indigenous communities (e.g. Ch'ol, groups close to the Wayuu) opposing organized crime and mining.</div><div class="source">Global Witness, Roots of Resistance 2025</div></div>
+      <div class="card orange"><div class="name">Iran — Kurds and other minorities <span class="level">Orange</span></div><div class="drivers">Arbitrary detention, torture, and executions targeting Kurdish, Baloch, Ahwazi Arab, and Azerbaijani Turkic communities; intensified security operations in 2025-26.</div><div class="source">Amnesty International Iran 2025, Kurdistan Human Rights Network 2025-26</div></div>
+      <div class="card orange"><div class="name">Italy — Roma/Travellers <span class="level">Orange</span></div><div class="drivers">44% of surveyed Roma/Travellers reported hate-motivated harassment in the past year (2024) — the highest among surveyed EU countries.</div><div class="source">EU FRA Roma Survey 2024</div></div>
+      <div class="card orange"><div class="name">Ireland and Portugal — Roma/Travellers <span class="level">Orange</span></div><div class="drivers">Among the highest discrimination rates recorded in the 2024 FRA survey, alongside Italy.</div><div class="source">EU FRA Roma Survey 2024</div></div>
+      <div class="card orange"><div class="name">Brazil — indigenous peoples <span class="level">Orange</span></div><div class="drivers">12 land/environmental defenders killed in 2024, disproportionately from indigenous communities.</div><div class="source">Global Witness, Roots of Resistance 2025</div></div>
+      <div class="card yellow"><div class="name">Czechia and Greece — Roma/Travellers <span class="level">Yellow</span></div><div class="drivers">Discrimination and harassment documented in FRA surveys, though somewhat lower than Italy/Ireland/Portugal's level.</div><div class="source">EU FRA Roma Survey 2024/2025</div></div>
+      <div class="card yellow"><div class="name">Turkey — Kurds <span class="level">Yellow</span></div><div class="drivers">Entrenched discrimination against Kurdish language and political expression persists, despite the 2025 PKK-Turkey ceasefire process; officially "not permitted to fully exercise" linguistic/cultural rights per DFAT's assessment.</div><div class="source">DFAT Turkey Country Report 2025</div></div>
+      <div class="card yellow"><div class="name">EU-wide — Roma (aggregate) <span class="level">Yellow</span></div><div class="drivers">80% of Roma surveyed EU-wide live below the poverty-risk threshold (versus 17% EU average); the discrimination rate remains stuck around 26%, falling short of the EU's own 2030 reduction target.</div><div class="source">EU FRA Roma Survey findings, 2022/2024</div></div>
+    </div>
+  </div>
+
+  <!-- PRESS -->
+  <div class="panel" id="press">
+    <div class="methodology">
+      <p><a class="live-link" href="https://cpj.org/data/" target="_blank" rel="noopener">📡 Live dashboard / current data</a><br><strong>Scope:</strong> this measures whether a journalist can physically and legally report on events without being killed, imprisoned, or facing consequence-free violence for it — not media-ownership concentration or editorial bias. Metric: Committee to Protect Journalists (CPJ) data on journalists killed and jailed (2025), plus CPJ's Global Impunity Index (journalist murders that go unpunished).</p>
+      <p><strong>Red</strong> = journalists killed for their reporting in 2025 and/or among the world's worst jailers. <strong>Orange</strong> = appears on CPJ's Global Impunity Index (persistently unsolved journalist murders) without being at the worst killing/jailing tier. <strong>Yellow</strong> = documented individual cases of journalists killed, jailed, or facing serious legal risk for reporting, below red/orange intensity.</p>
+    </div>
+    <div class="legend">
+      <span><span class="dot red"></span>Journalists killed in 2025 / worst jailer</span>
+      <span><span class="dot orange"></span>On the Global Impunity Index (unsolved murders)</span>
+      <span><span class="dot yellow"></span>Documented individual cases</span>
+    </div>
+    <div class="grid">
+      <div class="card red"><div class="name">Israel / Gaza <span class="level">Red</span></div><div class="drivers">Responsible for two-thirds of all journalist and media-worker killings worldwide in 2025 (a record total of 129); also the 3rd-worst jailer, with 29 Palestinian journalists held without charge.</div><div class="source">CPJ, Record 129 Press Members Killed report, 2026</div></div>
+      <div class="card red"><div class="name">China <span class="level">Red</span></div><div class="drivers">The world's worst jailer of journalists for the 3rd consecutive year — 50 detained, including 7 in Hong Kong; 61% of all imprisoned journalists worldwide are held on anti-state charges, a pattern China exemplifies.</div><div class="source">CPJ Prison Census 2025, January 2026</div></div>
+      <div class="card red"><div class="name">Myanmar <span class="level">Red</span></div><div class="drivers">2nd-worst jailer (30 detained); the military has also directly killed journalists covering protests since the 2021 coup.</div><div class="source">CPJ Prison Census 2025, Global Impunity Index</div></div>
+      <div class="card orange"><div class="name">Mexico <span class="level">Orange</span></div><div class="drivers">28 unsolved journalist murders over the past decade — the highest of any country in the Western Hemisphere; a 2025 killing wave (6 killed) despite a federal protection program.</div><div class="source">CPJ Global Impunity Index, CPJ report Aug. 2026</div></div>
+      <div class="card orange"><div class="name">Syria, Somalia, Afghanistan, Iraq <span class="level">Orange</span></div><div class="drivers">Round out the top 5 of CPJ's Global Impunity Index — entrenched, unpunished journalist murders over the past decade.</div><div class="source">CPJ Global Impunity Index</div></div>
+      <div class="card orange"><div class="name">Pakistan <span class="level">Orange</span></div><div class="drivers">On the Global Impunity Index every year since its 2008 creation; 39 journalists killed since 1992, only 3 with any accountability.</div><div class="source">CPJ, "If you scream no one will hear you," 2024</div></div>
+      <div class="card orange"><div class="name">Haiti, South Sudan, Philippines, Brazil, India <span class="level">Orange</span></div><div class="drivers">Persistent presence on the Global Impunity Index for unsolved journalist killings.</div><div class="source">CPJ Global Impunity Index</div></div>
+      <div class="card orange"><div class="name">Iran <span class="level">Orange</span></div><div class="drivers">Journalists killed in Israeli strikes in 2025 counted in the overall record tally; separately, one of the leading domestic jailers of journalists.</div><div class="source">CPJ reports 2025</div></div>
+      <div class="card yellow"><div class="name">Russia and Belarus <span class="level">Yellow</span></div><div class="drivers">Among the leading jailers after China/Myanmar/Israel; a Ukrainian journalist (Viktoria Roshchina) allegedly killed in Russian custody in 2024.</div><div class="source">CPJ Prison Census 2025</div></div>
+      <div class="card yellow"><div class="name">Ukraine <span class="level">Yellow</span></div><div class="drivers">Journalists killed covering the war; 11+ Ukrainian journalists held in Russian custody as of late 2025.</div><div class="source">CPJ reports, Nov. 2025</div></div>
+      <div class="card yellow"><div class="name">Ethiopia, Egypt, Turkey <span class="level">Yellow</span></div><div class="drivers">Named by CPJ among the "world's worst jailers," treating political journalism as equivalent to opposition.</div><div class="source">CPJ, near-record imprisonment report, 2026</div></div>
+      <div class="card yellow"><div class="name">United States <span class="level">Yellow</span></div><div class="drivers">Joined the list of countries jailing journalists in 2025 for the first time, via the months-long detention of journalist Mario Guevara.</div><div class="source">CPJ Prison Census 2025</div></div>
+      <div class="card yellow"><div class="name">Guatemala, Honduras, Colombia, Peru <span class="level">Yellow</span></div><div class="drivers">Individual journalist killings documented by CPJ in 2025 outside active war zones.</div><div class="source">CPJ, Record 129 Press Members Killed report, 2026</div></div>
+    </div>
+  </div>
+
+  <!-- ECONOMIC MIGRATION -->
+  <div class="panel" id="econmig">
+    <div class="methodology">
+      <p><a class="live-link" href="https://worldmigrationreport.iom.int/" target="_blank" rel="noopener">📡 Live dashboard / current data</a><br><strong>Scope:</strong> people leaving primarily because the domestic economy can no longer sustain them — currency collapse, hyperinflation, unemployment, loss of purchasing power — as distinct from those fleeing war/persecution (see the Armed Conflict and Minorities maps) or organized-crime violence (see the Organized Crime map). In practice these causes often overlap (Cuba and Venezuela combine economic collapse with political repression), so entries here are countries where economic collapse is the primary or clearly independent driver, not just conflict/crime spillover.</p>
+      <p><strong>Red</strong> = documented mass exodus (population loss ≥ 5% within a few years) with economic collapse as the stated primary driver. <strong>Orange</strong> = large-scale, sustained economically driven emigration (brain drain, labor emigration) without a mass-exodus-scale population loss. <strong>Yellow</strong> = strong structural dependence on labor emigration/remittances as an economic strategy, a longer-term pattern rather than an acute crisis.</p>
+    </div>
+    <div class="legend">
+      <span><span class="dot red"></span>Mass exodus, economic collapse (population loss ≥5%)</span>
+      <span><span class="dot orange"></span>Sustained large-scale economic emigration / brain drain</span>
+      <span><span class="dot yellow"></span>Structural dependence on labor emigration/remittances</span>
+    </div>
+    <div class="grid">
+      <div class="card red"><div class="name">Cuba <span class="level">Red</span></div><div class="drivers">The largest migration wave since the 1959 revolution — official figures show over 1 million left in 2022-23 (~10% of the population); 250,000+ more in 2024. Driven by currency collapse, chronic shortages, and blackouts, distinct from earlier Cold War-era political exile waves.</div><div class="source">Cuba's National Statistics Office (ONEI), Cuba Horizonte/Columbia Law, 2024-25</div></div>
+      <div class="card red"><div class="name">Sri Lanka <span class="level">Red</span></div><div class="drivers">200,000+ people left for jobs abroad in the first half of 2022 alone (versus 120,000 for all of 2021) following the economy's sovereign default; the government actively lowered emigration age limits to boost remittance income.</div><div class="source">The Diplomat, Sri Lanka Bureau of Foreign Employment, 2022</div></div>
+      <div class="card red"><div class="name">Zimbabwe <span class="level">Red</span></div><div class="drivers">Over a million people in the diaspora amid a decades-long currency and economic crisis; migration functions as a remittance-sustained household survival strategy.</div><div class="source">Southern African Migration Programme, "Zimbabwe's Exodus"</div></div>
+      <div class="card orange"><div class="name">Nigeria <span class="level">Orange</span></div><div class="drivers">The "Japa" phenomenon: 3.6 million+ emigrated in 2022-23 alone per migration data; Nigeria and Ghana together lost an estimated $2.3 billion in human capital in 2023, as 38% of tech graduates left, driven more by the naira's collapse and inflation than by conflict.</div><div class="source">Nigeria Immigration Service (MIDAS), academic studies 2023-24</div></div>
+      <div class="card orange"><div class="name">Lebanon <span class="level">Orange</span></div><div class="drivers">Currency collapse (losing ~98% of its value since 2019) is driving sustained skilled-worker emigration, distinct from the country's own conflict exposure.</div><div class="source">World Bank economic monitoring on Lebanon</div></div>
+      <div class="card orange"><div class="name">Ghana <span class="level">Orange</span></div><div class="drivers">Paired with Nigeria in West Africa's "brain drain" — health and tech workers leaving over currency depreciation and wage stagnation.</div><div class="source">Academic human-capital-loss studies, 2024</div></div>
+      <div class="card orange"><div class="name">Venezuela <span class="level">Orange</span></div><div class="drivers">7 million+ have left since 2014 amid hyperinflation and economic collapse; rated orange rather than red here because political repression is also a major, independent driver, making it hard to isolate the economic factor alone.</div><div class="source">UNHCR/R4V regional platform</div></div>
+      <div class="card yellow"><div class="name">Tajikistan <span class="level">Yellow</span></div><div class="drivers">Remittances equal ~48% of GDP — the world's highest dependency ratio — reflecting a structural economy built around labor migration to Russia.</div><div class="source">World Bank/theglobaleconomy.com, 2024 data</div></div>
+      <div class="card yellow"><div class="name">Philippines <span class="level">Yellow</span></div><div class="drivers">One of the world's leading remittance-receiving countries; overseas labor migration is a long-standing, government-encouraged economic strategy, not a crisis-driven exodus.</div><div class="source">IOM World Migration Report 2024</div></div>
+      <div class="card yellow"><div class="name">Bangladesh and Nepal <span class="level">Yellow</span></div><div class="drivers">Major labor-exporting economies with strong structural dependence on remittances; the IOM specifically flagged Bangladesh for facing simultaneous emigration and displacement pressures.</div><div class="source">IOM World Migration Report 2024</div></div>
+      <div class="card yellow"><div class="name">Mexico and India <span class="level">Yellow</span></div><div class="drivers">Among the world's top remittance-receiving countries; large-scale economic migration is long-standing and structural, rather than an acute crisis.</div><div class="source">World Migration Report 2024/2026, remittance data</div></div>
+    </div>
+  </div>
+
+  <!-- RELIGION -->
+  <div class="panel" id="religion">
+    <div class="methodology">
+      <p><a class="live-link" href="https://www.opendoors.org/world-watch-list/" target="_blank" rel="noopener">📡 Live dashboard / current data</a><br><strong>Metric:</strong> two complementary, established monitors — the Open Doors World Watch List (focused on anti-Christian persecution) and USCIRF's Countries of Particular Concern (CPC) / Special Watch List (covering all religions, including treatment of Muslim minorities like the Uyghurs and Rohingya). Both are standard references used across the field, including by governments and UN bodies.</p>
+      <p><strong>Red</strong> = Open Doors "extreme persecution" level (top 15) and/or a USCIRF CPC designation. <strong>Orange</strong> = Open Doors ranks 16-30 and/or USCIRF Special Watch List. <strong>Yellow</strong> = specific, documented restrictions or incidents that don't rise to a top-tier designation on either list.</p>
+      <p><strong>A note on scope:</strong> neither Ukraine nor Israel appears on the Open Doors list or on USCIRF's CPC/SWL lists — the two most-used religious-freedom monitors don't rank them alongside North Korea, Afghanistan, or China. Both have real, documented religious-freedom disputes, covered separately below rather than folded into the main red/orange/yellow scale, since doing so would overstate what the primary sources actually say.</p>
+      <p><strong>A note on method:</strong> advocacy-group indices (Open Doors) and government commissions (USCIRF) aggregate refugee testimony, field reports, and journalism precisely because independent reporting is often impossible within the worst-rated countries (there's no free press operating inside North Korea to verify Open Doors' figures). Where direct investigative journalism exists that complicates an index's framing — as with Nigeria below — it is cited alongside the index rather than omitted.</p>
+    </div>
+    <div class="legend">
+      <span><span class="dot red"></span>Extreme persecution level / USCIRF CPC</span>
+      <span><span class="dot orange"></span>Severe level / USCIRF Special Watch List</span>
+      <span><span class="dot yellow"></span>Specific documented restrictions, lower level</span>
+    </div>
+    <div class="grid">
+      <div class="card red"><div class="name">North Korea <span class="level">Red</span></div><div class="drivers">#1 on the Open Doors list for the 23rd time since 1993; AI-assisted state surveillance is now used to detect Christian believers.</div><div class="source">Open Doors World Watch List 2026, USCIRF CPC</div></div>
+      <div class="card red"><div class="name">Afghanistan <span class="level">Red</span></div><div class="drivers">Strict Taliban enforcement targeting religious minorities; a new 2026 USCIRF CPC addition.</div><div class="source">USCIRF Annual Report 2026</div></div>
+      <div class="card red"><div class="name">China <span class="level">Red</span></div><div class="drivers">USCIRF CPC; systematic state-driven persecution of Uyghur Muslims and other Turkic minorities; house-church raids and surveillance of Christians.</div><div class="source">USCIRF Annual Report 2026</div></div>
+      <div class="card red"><div class="name">Myanmar (Burma) <span class="level">Red</span></div><div class="drivers">USCIRF CPC; military bombing of places of worship; both Rohingya Muslims and Christian ethnic minorities are targeted.</div><div class="source">USCIRF Annual Report 2026, Open Doors #4</div></div>
+      <div class="card red"><div class="name">Somalia, Yemen, Sudan, Eritrea <span class="level">Red</span></div><div class="drivers">Ranked 2-5 on Open Doors 2026 — extreme violence and state or militant hostility toward Christian minorities; Eritrea is also a long-standing USCIRF CPC.</div><div class="source">Open Doors World Watch List 2026, USCIRF CPC</div></div>
+      <div class="card red"><div class="name">Syria <span class="level">Red</span></div><div class="drivers">The largest single-year score jump in World Watch List history following the fall of the Assad regime; USCIRF added it as a new CPC in 2026, citing sectarian massacres against Alawites, Druze, and Christians.</div><div class="source">Open Doors WWL 2026, USCIRF 2026</div></div>
+      <div class="card red"><div class="name">Nigeria <span class="level">Red</span></div><div class="drivers">Open Doors: 70% of Christians killed for their faith worldwide (3,490 of 4,849) occurred here; a USCIRF CPC since Oct. 2025. However, a BBC Africa Eye investigation (Sept. 2026) questioned the "Christian genocide" framing, finding the violence stems from a complex mix of weak governance, land/resource conflict, and ethnic tension crossing religious lines — not a centrally organized anti-Christian campaign — and questioned the methodology used to determine victims' religious identities in some advocacy-group counts.</div><div class="source">Open Doors WWL 2026, USCIRF 2026, <em>BBC Africa Eye investigation, Sept. 2026</em></div></div>
+      <div class="card red"><div class="name">Pakistan and Iran <span class="level">Red</span></div><div class="drivers">Both in Open Doors' top 10; USCIRF CPCs for blasphemy-law-related violence and Baha'i/Christian persecution respectively.</div><div class="source">Open Doors WWL 2026, USCIRF CPC</div></div>
+      <div class="card orange"><div class="name">India <span class="level">Orange</span></div><div class="drivers">A new USCIRF CPC recommendation in 2026; anti-conversion laws fueling mob violence against Muslims and Christians.</div><div class="source">USCIRF Annual Report 2026</div></div>
+      <div class="card orange"><div class="name">Russia and Tajikistan <span class="level">Orange</span></div><div class="drivers">Both long-standing USCIRF CPCs; Tajikistan specifically denies parents the right to teach their children about faith.</div><div class="source">USCIRF Annual Report 2026</div></div>
+      <div class="card orange"><div class="name">Saudi Arabia, Cuba, Nicaragua <span class="level">Orange</span></div><div class="drivers">USCIRF CPCs; Cuba is also rated the most persecuted country in Latin America for Christians per Open Doors.</div><div class="source">USCIRF 2026, Open Doors WWL 2026</div></div>
+      <div class="card orange"><div class="name">Libya, Vietnam <span class="level">Orange</span></div><div class="drivers">New 2026 USCIRF CPC additions — moral policing/persecution of Sufis in Libya; intensified crackdown on independent faiths in Vietnam.</div><div class="source">USCIRF Annual Report 2026</div></div>
+      <div class="card yellow"><div class="name">Egypt, Turkey, Iraq, Indonesia <span class="level">Yellow</span></div><div class="drivers">USCIRF Special Watch List — severe violations but not yet "particularly severe."</div><div class="source">USCIRF Annual Report 2026</div></div>
+      <div class="card yellow"><div class="name">Kazakhstan, Kyrgyzstan, Uzbekistan <span class="level">Yellow</span></div><div class="drivers">USCIRF Special Watch List; restrictive religious-registration laws across Central Asia.</div><div class="source">USCIRF Annual Report 2026</div></div>
+      <div class="card yellow"><div class="name">Sri Lanka, Malaysia, Algeria, Azerbaijan <span class="level">Yellow</span></div><div class="drivers">USCIRF Special Watch List for severe, documented restrictions below the CPC threshold.</div><div class="source">USCIRF Annual Report 2026</div></div>
+    </div>
+
+    <div class="methodology" style="margin-top:1.1rem;">
+      <p><strong>Documented disputes, outside the standard ratings:</strong></p>
+      <p><strong>Ukraine — Ukrainian Orthodox Church (Moscow Patriarchate).</strong> Ukraine's 2024 law bans religious organizations whose governing center is located in a state "conducting armed aggression" against Ukraine, targeting the UOC-MP for its historical ties to the Russian Orthodox Church, which backed the invasion. The government and many Ukrainians frame this as a national-security measure against a church used for foreign influence; some UOC leaders, the UN Human Rights Monitoring Mission, and UN special experts have called it a restriction on religious freedom. USCIRF expressed concern about the law but also stated that "Russia remains the deepest threat to religious freedom in Ukraine," including repression in Russian-occupied Ukrainian territory. Neither Ukraine nor Russia appears on USCIRF's CPC list for this specific dispute; Russia is a CPC for separate, broader reasons.</p>
+      <p><strong>Israel, the West Bank, and Gaza — access to and war damage at religious sites.</strong> US State Department International Religious Freedom reports document: periodic Israeli restrictions on Muslim access to the Ibrahimi Mosque/Tomb of the Patriarchs and the call to prayer there; attacks and vandalism against Christian clergy and holy sites in Jerusalem (71-105 documented incidents per year in recent reports, with a low conviction rate); and, during the Israel-Hamas war, Israeli strikes that killed Muslims and Christians sheltering in mosques and churches in Gaza and damaged dozens of religious sites. The Israeli government states these are security measures and disputes characterizations of intent. Palestinian Authority restrictions on some unrecognized religious groups are also documented in the same reports. Israel does not appear on USCIRF's CPC or SWL lists.</p>
+    </div>
+  </div>
+
+  <div class="foot">
+    <p><strong>Why separate maps:</strong> a composite score hides which specific problem is driving a country's instability. South Africa, for example, is a global outlier in inequality and organized crime, but doesn't appear at all on the conflict or famine maps — a single combined score would have obscured that distinction.</p>
+    <p><strong>Snapshot, not live data:</strong> conflict and famine data change week to week (see the maps-links subpage for live trackers); inequality and organized-crime scores update annually or less often.</p>
+    <p><strong>On disputed cases:</strong> ratings reflect what the cited indices report, not a political stance.</p>
+  </div>
+
+  <div class="sources">
+    <h2>Sources, for individual review</h2>
+    <p class="sources-note">Every rating above traces back to one of these. Verify the primary source directly before relying on any single entry — especially for conflict and disease data, which change week to week.</p>
+    <p class="sources-note"><span class="badge open">🔓 Free / open access</span> = readable without login or payment. <span class="badge reg">🪪 Requires free registration</span> = full text is free but the publisher requires a no-cost account (this is Lancet's model, not a paywall). <span class="badge lock">🔒 May require paid subscription</span> = the publisher may charge; check PubMed/PMC or the authors' own repository first for a free copy. Of the sources below, only the Lancet study falls outside direct open access, and that's registration, not payment — everything else is freely accessible per the link.</p>
+
+    <h3>Armed Conflict / War</h3>
+    <ul>
+      <li><a href="https://acleddata.com/" target="_blank" rel="noopener">ACLED</a> — real-time conflict event data and Conflict Index <span class="badge open">🔓 Free / open access</span></li>
+      <li><a href="https://acleddata.com/series/conflict-watchlist-2026" target="_blank" rel="noopener">ACLED Conflict Watchlist 2026</a> <span class="badge open">🔓 Free / open access</span></li>
+      <li><a href="https://fragilestatesindex.org/analytics/fsi-heat-map/" target="_blank" rel="noopener">Fragile States Index — Heat Map</a> (Fund for Peace, 2024/25 data) <span class="badge open">🔓 Free / open access</span></li>
+      <li><a href="https://www.cfr.org/global-conflict-tracker" target="_blank" rel="noopener">CFR Global Conflict Tracker</a> <span class="badge open">🔓 Free / open access</span></li>
+      <li><a href="https://ucdp.uu.se/" target="_blank" rel="noopener">UCDP — Uppsala Conflict Data Program</a> <span class="badge open">🔓 Free / open access</span></li>
+    </ul>
+
+    <h3>Famine / Food Insecurity</h3>
+    <ul>
+      <li><a href="https://www.ipcinfo.org/famine-facts/" target="_blank" rel="noopener">IPC Famine Facts</a> (Integrated Food Security Phase Classification) <span class="badge open">🔓 Free / open access</span></li>
+      <li><a href="https://fews.net/" target="_blank" rel="noopener">FEWS NET</a> — Famine Early Warning Systems Network <span class="badge open">🔓 Free / open access</span></li>
+      <li><a href="https://www.fightfoodcrises.net/hunger-hotspots" target="_blank" rel="noopener">FAO/WFP Hunger Hotspots 2026</a> <span class="badge open">🔓 Free / open access</span></li>
+      <li><a href="https://www.fightfoodcrises.net/sites/default/files/resource/file/2026_GRFC_IN-BRIEF.pdf" target="_blank" rel="noopener">2026 Global Report on Food Crises (GRFC), summary</a> <span class="badge open">🔓 Free / open access</span></li>
+    </ul>
+
+    <h3>Economic Inequality</h3>
+    <ul>
+      <li><a href="https://ourworldindata.org/grapher/gini-coefficient-wb" target="_blank" rel="noopener">World Bank Gini Coefficient data (via Our World in Data)</a> <span class="badge open">🔓 Free / open access</span></li>
+      <li><a href="https://wid.world/world/" target="_blank" rel="noopener">World Inequality Database — World View</a> <span class="badge open">🔓 Free / open access</span></li>
+      <li><a href="https://blogs.worldbank.org/en/opendata/the-geography-of-high-inequality--monitoring-the-world-bank-s-ne" target="_blank" rel="noopener">World Bank — "The Geography of High Inequality"</a> (explains the Gini &gt; 40 threshold) <span class="badge open">🔓 Free / open access</span></li>
+    </ul>
+
+    <h3>Criminal Violence / Organized Crime</h3>
+    <ul>
+      <li><a href="https://ocindex.net/" target="_blank" rel="noopener">Global Organized Crime Index</a> (Global Initiative Against Transnational Organized Crime) <span class="badge open">🔓 Free / open access</span></li>
+      <li><a href="https://ocindex.net/report/2023/04-continental-overview.html" target="_blank" rel="noopener">Global Organized Crime Index 2023 — Continental Overview</a> <span class="badge open">🔓 Free / open access</span></li>
+    </ul>
+
+    <h3>Disease / Epidemic Outbreaks</h3>
+    <ul>
+      <li><a href="https://www.who.int/publications/m/item/multi-country-outbreak-of-cholera--epidemiological-update--38--30-june-2026" target="_blank" rel="noopener">WHO — Multi-country cholera outbreak, epidemiological update #38 (June 2026)</a> <span class="badge open">🔓 Free / open access</span></li>
+      <li><a href="https://en.wikipedia.org/wiki/2026_Central_Africa_Ebola_epidemic" target="_blank" rel="noopener">2026 Central Africa Ebola epidemic — overview and WHO PHEIC declaration</a> <span class="badge open">🔓 Free / open access</span></li>
+      <li><a href="https://www.ecdc.europa.eu/en/all-topics-z/cholera/surveillance-and-disease-data/cholera-monthly" target="_blank" rel="noopener">ECDC — Monthly global cholera overview</a> <span class="badge open">🔓 Free / open access</span></li>
+      <li><a href="https://www.unicef.org/press-releases/cholera-spreads-across-borders-west-and-central-africa-unicef-calls-urgent-action" target="_blank" rel="noopener">UNICEF — Cholera spreads across West and Central Africa (Aug. 2026)</a> <span class="badge open">🔓 Free / open access</span></li>
+    </ul>
+
+    <h3>Corruption</h3>
+    <ul>
+      <li><a href="https://www.transparency.org/en/news/cpi-2025-findings-insights-corruption" target="_blank" rel="noopener">Transparency International — CPI 2025: Findings and Insights</a> <span class="badge open">🔓 Free / open access</span></li>
+      <li><a href="https://files.transparencycdn.org/images/CPI-2025-Report-EN.pdf" target="_blank" rel="noopener">Transparency International — Corruption Perceptions Index 2025, full report (PDF)</a> <span class="badge open">🔓 Free / open access</span></li>
+      <li><a href="https://www.transparency.org/en/press/corruption-perceptions-index-2025-corruption-across-americas-damaging-peoples-lives-is-fuelling-violence" target="_blank" rel="noopener">Transparency International — CPI 2025, Americas regional analysis</a> <span class="badge open">🔓 Free / open access</span></li>
+    </ul>
+
+    <h3>Drug Production / Trafficking</h3>
+    <ul>
+      <li><a href="https://www.unodc.org/documents/data-and-analysis/WDR_2025/WDR25_B1_Key_findings.pdf" target="_blank" rel="noopener">UNODC — World Drug Report 2025, key findings (PDF)</a> <span class="badge open">🔓 Free / open access</span></li>
+      <li><a href="https://www.unodc.org/unodc/en/crop-monitoring/" target="_blank" rel="noopener">UNODC — Illicit Crop Monitoring Programme</a> (coca, opium, cannabis surveys by country) <span class="badge open">🔓 Free / open access</span></li>
+      <li><a href="https://unis.unvienna.org/unis/en/pressrels/2025/unisnar1499.html" target="_blank" rel="noopener">UN Information Service — World Drug Report 2025 press release</a> <span class="badge open">🔓 Free / open access</span></li>
+    </ul>
+
+    <h3>Violence Against Women</h3>
+    <ul>
+      <li><a href="https://www.thelancet.com/article/S0140-6736(21)02664-7/fulltext" target="_blank" rel="noopener">The Lancet — Global, regional, and national estimates of intimate partner violence prevalence</a> <span class="badge reg">🪪 Requires free registration (not a paid subscription)</span></li>
+      <li><a href="https://www.unwomen.org/sites/default/files/2025-11/femicides-in-2024-global-estimates-of-intimate-partner-family-member-femicides-en.pdf" target="_blank" rel="noopener">UN Women / UNODC — Femicides in 2024: Global Estimates (PDF)</a> <span class="badge open">🔓 Free / open access</span></li>
+      <li><a href="https://www.unwomen.org/en/news-stories/press-release/2025/11/every-day-137-women-and-girls-are-killed-by-intimate-partners-or-family-members" target="_blank" rel="noopener">UN Women — Press release, Nov. 2025</a> <span class="badge open">🔓 Free / open access</span></li>
+    </ul>
+
+    <h3>Violence Against Minorities (self-identified national/ethnic minorities)</h3>
+    <ul>
+      <li><a href="https://fra.europa.eu/sites/default/files/fra_uploads/fra-2025-roma-survey-2024_en.pdf" target="_blank" rel="noopener">EU FRA — Roma and Traveller Survey 2024 (13 countries, self-identified respondents)</a> <span class="badge open">🔓 Free / open access</span></li>
+      <li><a href="https://fra.europa.eu/en/publication/2022/roma-survey-findings" target="_blank" rel="noopener">EU FRA — Roma Survey Findings</a> <span class="badge open">🔓 Free / open access</span></li>
+      <li><a href="https://globalwitness.org/en/campaigns/land-and-environmental-defenders/roots-of-resistance/" target="_blank" rel="noopener">Global Witness — Roots of Resistance 2025 (killings of land/environmental/indigenous defenders)</a> <span class="badge open">🔓 Free / open access</span></li>
+      <li><a href="https://www.amnesty.org/en/location/middle-east-and-north-africa/middle-east/iran/report-iran/" target="_blank" rel="noopener">Amnesty International — Iran Report 2025</a> <span class="badge open">🔓 Free / open access</span></li>
+      <li><a href="https://www.dfat.gov.au/sites/default/files/country-information-report-turkey.pdf" target="_blank" rel="noopener">Australia's DFAT — Turkey Country Report 2025 (Kurds section)</a> <span class="badge open">🔓 Free / open access</span></li>
+      <li><a href="https://www.globalr2p.org/populations-at-risk/" target="_blank" rel="noopener">Global Centre for the Responsibility to Protect — Populations at Risk</a> (for the Uyghur/Rohingya rating) <span class="badge open">🔓 Free / open access</span></li>
+      <li><a href="https://www.ohchr.org/en/stories/2026/09/myanmars-rohingya-and-other-minorities-face-renewed-terror-illicit-economies-boom" target="_blank" rel="noopener">OHCHR — Myanmar's Rohingya and other minorities face renewed terror (Sept. 2026)</a> <span class="badge open">🔓 Free / open access</span></li>
+    </ul>
+
+    <h3>Press Freedom</h3>
+    <ul>
+      <li><a href="https://cpj.org/special-reports/record-129-press-members-killed-in-2025-israel-responsible-for-2-of-3-of-deaths/" target="_blank" rel="noopener">CPJ — Record 129 Press Members Killed in 2025</a> <span class="badge open">🔓 Free / open access</span></li>
+      <li><a href="https://cpj.org/2026/01/journalist-jailings-imperil-a-free-press-worldwide-amid-reports-of-life-threatening-prison-conditions-cpj/" target="_blank" rel="noopener">CPJ — 2025 Prison Census (China, Myanmar, Israel lead as jailers)</a> <span class="badge open">🔓 Free / open access</span></li>
+      <li><a href="https://cpj.org/campaigns/campaign-against-impunity/" target="_blank" rel="noopener">CPJ — Global Impunity Index</a> <span class="badge open">🔓 Free / open access</span></li>
+      <li><a href="https://cpj.org/2026/08/amid-spike-in-journalist-killings-in-mexico-cpj-urges-federalizing-cases-to-end-impunity/" target="_blank" rel="noopener">CPJ — Spike in journalist killings in Mexico, Aug. 2026</a> <span class="badge open">🔓 Free / open access</span></li>
+    </ul>
+
+    <h3>Economic Migration</h3>
+    <ul>
+      <li><a href="https://en.cibercuba.com/noticias/2025-05-23-u1-e42839-s27061-nid303477-exodo-imparable-250000-cubanos-emigraron-2024" target="_blank" rel="noopener">Cuba's National Statistics Office (ONEI) — 2024 emigration data</a> <span class="badge open">🔓 Free / open access</span></li>
+      <li><a href="https://horizontecubano.law.columbia.edu/news/economic-crisis-cuba-its-causes-and-migration" target="_blank" rel="noopener">Columbia Law / Cuba Horizonte — Cuba's Economic Crisis and Migration</a> <span class="badge open">🔓 Free / open access</span></li>
+      <li><a href="https://thediplomat.com/2022/09/sri-lankas-worrying-exodus/" target="_blank" rel="noopener">The Diplomat — Sri Lanka's Worrying Exodus, 2022</a> <span class="badge open">🔓 Free / open access</span></li>
+      <li><a href="https://ar-journal.com/index.php/pub/article/view/65" target="_blank" rel="noopener">"The Great Talent Exodus" — Nigeria/Ghana human-capital-loss study, 2024</a> <span class="badge open">🔓 Free / open access</span></li>
+      <li><a href="https://worldmigrationreport.iom.int/what-we-do/world-migration-report-2026/chapter-2/international-remittances" target="_blank" rel="noopener">IOM World Migration Report — International Remittances chapter</a> <span class="badge open">🔓 Free / open access</span></li>
+      <li><a href="https://reliefweb.int/report/world/world-migration-report-2024-enpt" target="_blank" rel="noopener">IOM World Migration Report 2024</a> <span class="badge open">🔓 Free / open access</span></li>
+      <li><a href="https://www.theglobaleconomy.com/rankings/remittances_percent_GDP/" target="_blank" rel="noopener">Remittances as % of GDP by country (World Bank data)</a> <span class="badge open">🔓 Free / open access</span></li>
+    </ul>
+
+    <h3>Religious Freedom / Persecution</h3>
+    <ul>
+      <li><a href="https://www.opendoors.org/world-watch-list/" target="_blank" rel="noopener">Open Doors — World Watch List 2026</a> <span class="badge open">🔓 Free / open access</span></li>
+      <li><a href="https://www.uscirf.gov/sites/default/files/2026-03/USCIRF_2026_AR_3326_NEW.pdf" target="_blank" rel="noopener">USCIRF — Annual Report 2026 (PDF)</a> <span class="badge open">🔓 Free / open access</span></li>
+      <li><a href="https://www.uscirf.gov/countries/2026-recommendations" target="_blank" rel="noopener">USCIRF — Country Recommendations 2026 (CPC / SWL lists)</a> <span class="badge open">🔓 Free / open access</span></li>
+      <li><a href="https://www.ohchr.org/en/press-releases/2025/10/ukraine-un-experts-warn-persecution-against-ukrainian-orthodox-church" target="_blank" rel="noopener">OHCHR — UN experts on the Ukrainian Orthodox Church law, Oct. 2025</a> <span class="badge open">🔓 Free / open access</span></li>
+      <li><a href="https://www.state.gov/reports/2023-report-on-international-religious-freedom/ukraine/" target="_blank" rel="noopener">US State Department — 2023 Report on International Religious Freedom: Ukraine</a> <span class="badge open">🔓 Free / open access</span></li>
+      <li><a href="https://www.state.gov/reports/2023-report-on-international-religious-freedom/israel-west-bank-and-gaza/" target="_blank" rel="noopener">US State Department — 2023 Report on International Religious Freedom: Israel, West Bank, and Gaza</a> <span class="badge open">🔓 Free / open access</span></li>
+      <li><a href="https://saharareporters.com/2026/09/03/bbc-africa-eye-investigation-questions-christian-genocide-narrative-nigeria-finds" target="_blank" rel="noopener">BBC Africa Eye investigation into the "Christian genocide" narrative in Nigeria, Sept. 2026 (via Sahara Reporters)</a> <span class="badge open">🔓 Free / open access</span></li>
+    </ul>
+  </div>
+
+  <div class="foot">
+    <p>Licensed under <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener">CC BY 4.0</a> — see LICENSE-en.html (in the project folder) for what that covers. Underlying third-party data (indices, WHO/UN reports, etc.) retains its own license/copyright.</p>
+  </div>
+
+</div>
+
+<style>
+  .sources{margin-top:2.2rem;padding-top:1.4rem;border-top:2px solid var(--line);}
+  .sources h2{font-size:1.15rem;margin:0 0 0.4rem;font-weight:600;}
+  .sources-note{font-size:0.86rem;color:var(--muted);margin:0 0 1.2rem;max-width:70ch;}
+  .sources h3{font-size:0.95rem;margin:1.1rem 0 0.4rem;font-weight:700;}
+  .sources ul{margin:0 0 0.4rem;padding-left:1.2rem;}
+  .sources li{font-size:0.88rem;margin-bottom:0.3rem;}
+  .sources a{color:#5b4a2f;}
+  .sources a:hover{color:var(--red);}
+  .badge{display:inline-block;font-size:0.72rem;padding:0.1rem 0.45rem;border-radius:3px;margin-left:0.3rem;white-space:nowrap;}
+  .badge.open{background:#e2ede2;color:#2f5c34;}
+  .badge.reg{background:#eee8d5;color:#7a6a1f;}
+  .badge.lock{background:#f3ded9;color:#8a3a24;}
+  .freshness{border:1px solid var(--line);background:#fff;border-radius:4px;padding:1rem 1.2rem;margin-bottom:1.6rem;}
+  .why-maps{font-size:0.92rem;color:#3a3730;max-width:78ch;margin:0 0 1.6rem;line-height:1.6;padding:0.9rem 1.1rem;background:#f2ede0;border-left:3px solid #a9631a;border-radius:0 4px 4px 0;}
+  .freshness-title{font-weight:700;font-size:0.95rem;margin:0 0 0.5rem;}
+  .cadence-table{width:100%;border-collapse:collapse;margin-top:0.8rem;font-size:0.83rem;}
+  .cadence-table th{text-align:left;border-bottom:2px solid var(--line);padding:0.35rem 0.5rem;}
+  .cadence-table td{border-bottom:1px solid var(--line);padding:0.35rem 0.5rem;color:#3a3730;}
+  .live-link{font-size:0.82rem;font-weight:600;display:inline-block;margin-top:0.3rem;}
+</style>
+
+<script>
+  document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById(btn.dataset.tab).classList.add('active');
+    });
+  });
+</script>
+</body>
+</html>

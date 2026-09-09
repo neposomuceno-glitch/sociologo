@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>社会不稳定热力图</title>
+<style>
+  :root{
+    --ink:#1c1a17;
+    --paper:#faf7f2;
+    --line:#d8d2c6;
+    --red:#b3261e;
+    --red-bg:#f8e4e2;
+    --orange:#a9631a;
+    --orange-bg:#f6e9d6;
+    --yellow:#8a7215;
+    --yellow-bg:#f5f0d8;
+    --muted:#6b675f;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family: Georgia, 'Iowan Old Style', serif;
+    line-height:1.5;
+    padding:2.5rem 1.5rem 4rem;
+  }
+  .wrap{max-width:920px;margin:0 auto;}
+  h1{
+    font-size:2rem;
+    margin:0 0 0.3rem;
+    font-weight:600;
+  }
+  .sub{
+    color:var(--muted);
+    font-size:1.02rem;
+    max-width:64ch;
+    margin:0 0 1.8rem;
+  }
+  .methodology{
+    border:1px solid var(--line);
+    background:#fff;
+    border-radius:4px;
+    padding:1rem 1.2rem;
+    font-size:0.92rem;
+    color:#3a3730;
+    margin-bottom:2.2rem;
+  }
+  .methodology p{margin:0.4rem 0;}
+  .legend{
+    display:flex;
+    gap:1.4rem;
+    flex-wrap:wrap;
+    margin:0 0 2rem;
+    font-size:0.9rem;
+  }
+  .legend span{
+    display:inline-flex;
+    align-items:center;
+    gap:0.5rem;
+  }
+  .dot{width:12px;height:12px;border-radius:50%;display:inline-block;}
+  .dot.red{background:var(--red);}
+  .dot.orange{background:var(--orange);}
+  .dot.yellow{background:var(--yellow);}
+
+  .region{margin-bottom:2.4rem;}
+  .region h2{
+    font-size:1.15rem;
+    border-bottom:1px solid var(--line);
+    padding-bottom:0.4rem;
+    margin-bottom:0.9rem;
+    font-weight:600;
+  }
+  .grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill,minmax(260px,1fr));
+    gap:0.7rem;
+  }
+  .card{
+    border-radius:4px;
+    padding:0.75rem 0.9rem;
+    border:1px solid transparent;
+  }
+  .card.red{background:var(--red-bg); border-color:#e3b7b2;}
+  .card.orange{background:var(--orange-bg); border-color:#e0c193;}
+  .card.yellow{background:var(--yellow-bg); border-color:#dcd08f;}
+  .card .name{
+    font-weight:700;
+    font-size:1rem;
+    display:flex;
+    justify-content:space-between;
+    align-items:baseline;
+  }
+  .card .level{
+    font-size:0.72rem;
+    text-transform:uppercase;
+    letter-spacing:0.03em;
+    font-weight:600;
+  }
+  .card.red .level{color:var(--red);}
+  .card.orange .level{color:var(--orange);}
+  .card.yellow .level{color:var(--yellow);}
+  .card .drivers{
+    font-size:0.86rem;
+    color:#4a473f;
+    margin-top:0.25rem;
+  }
+  .card .source{
+    font-size:0.76rem;
+    color:var(--muted);
+    margin-top:0.35rem;
+    font-style:italic;
+  }
+  .foot{
+    margin-top:2.5rem;
+    padding-top:1.2rem;
+    border-top:1px solid var(--line);
+    font-size:0.86rem;
+    color:var(--muted);
+  }
+  .foot p{margin:0.5rem 0;}
+</style>
+</head>
+<body>
+<div class="nav" style="background:#2b2a26; color:#e8e3d8; padding:0.9rem 1.5rem; display:flex; flex-wrap:wrap; gap:0.3rem 1rem; font-family:Georgia,serif; font-size:0.88rem;">
+  <a class="home" style="color:#e8e3d8; text-decoration:none; font-weight:700;" href="index-zh.html">首页</a>
+  <a style="color:#e8e3d8; text-decoration:none; opacity:0.85;" href="sociology-websites-directory-zh.html">社会学网站目录</a>
+  <a style="color:#e8e3d8; text-decoration:none; opacity:0.85;" href="social-problems-current-events-links-zh.html">时事动态</a>
+  <a style="color:#e8e3d8; text-decoration:none; opacity:0.85;" href="social-instability-maps-links-zh.html">地图链接</a>
+  <a style="color:#e8e3d8; text-decoration:none; opacity:0.85;" href="social-instability-heat-map-zh.html">热力图</a>
+  <a style="color:#e8e3d8; text-decoration:none; opacity:0.85;" href="social-instability-maps-by-type-zh.html">分类地图</a>
+  <a style="color:#e8e3d8; text-decoration:none; opacity:0.85;" href="key-contributors-social-problems-zh.html">贡献者</a>
+  <a style="color:#e8e3d8; text-decoration:none; opacity:0.85;" href="theoretical-sociologists-philosophers-zh.html">理论家</a>
+  <a style="color:#e8e3d8; text-decoration:none; opacity:0.85;" href="sociology-sponsors-power-control-zh.html">权力与赞助者</a>
+  <a style="color:#e8e3d8; text-decoration:none; opacity:0.85;" href="selected-works-by-contributor-zh.html">著作</a>
+  <a style="color:#e8e3d8; text-decoration:none; opacity:0.85;" href="LICENSE-zh.html">许可</a>
+</div>
+<div class="wrap">
+
+  <h1>社会不稳定热力图</h1>
+  <p class="sub">一份有据可查的综合快照,呈现当前根深蒂固的不稳定与新兴不稳定的分布地点——基于已发布的指数构建,而非依据主观意见。</p>
+
+  <div class="methodology">
+    <p><strong>颜色是如何分配的。</strong>每个国家的等级反映其在三项当前的、被引用的来源中的位置:<strong>2024/25年脆弱国家指数</strong>(和平基金会——综合安全、经济、人权、凝聚力的复合评分)、<strong>2026年粮农组织/世界粮食计划署饥荒热点</strong>报告(严重粮食不安全的最高/极高关注等级),以及<strong>ACLED 冲突观察名单</strong>/对活跃冲突的监测。</p>
+    <p><strong>红色</strong>=根深蒂固且相互叠加的危机(例如活跃战争+饥荒风险+跻身脆弱国家指数前15位)。<strong>橙色</strong>=单一维度上严重且持续的危机,或中等程度的脆弱性。<strong>黄色</strong>=至少有一个指数标记出的新兴或局部性关注,但未达到红色/橙色所观察到的叠加程度。</p>
+    <p>本快照的数据截至2026年9月;所有这些指数都按各自的时间表更新,因此请将本页面视为一个起点,对任何时间敏感的事项,请查阅一手来源(参见地图子页面获取直接链接)。</p>
+  </div>
+
+  <div class="legend">
+    <span><span class="dot red"></span>红色——根深蒂固/叠加</span>
+    <span><span class="dot orange"></span>橙色——严重,单一重大危机</span>
+    <span><span class="dot yellow"></span>黄色——新兴/局部性关注</span>
+  </div>
+
+  <div class="region">
+    <h2>非洲之角与萨赫勒地区</h2>
+    <div class="grid">
+      <div class="card red"><div class="name">苏丹 <span class="level">红色</span></div><div class="drivers">内战(苏丹武装部队对阵快速支援部队);2025年在法希尔和卡杜格利确认发生IPC第5阶段饥荒;跻身脆弱国家指数前10位。</div><div class="source">2024/25年脆弱国家指数,2025年9月IPC饥荒复审,2026年饥荒热点</div></div>
+      <div class="card red"><div class="name">南苏丹 <span class="level">红色</span></div><div class="drivers">跻身脆弱国家指数前5位;反复出现的饥荒风险;220万名儿童患有急性营养不良(2026年)。</div><div class="source">2024/25年脆弱国家指数,2026年饥荒热点</div></div>
+      <div class="card red"><div class="name">索马里 <span class="level">红色</span></div><div class="drivers">自2008年以来一直是脆弱国家指数的最脆弱国家;反复出现的饥荒风险;持续的叛乱活动。</div><div class="source">2024/25年脆弱国家指数,2026年饥荒热点</div></div>
+      <div class="card orange"><div class="name">埃塞俄比亚 <span class="level">橙色</span></div><div class="drivers">跻身脆弱国家指数前15位;内部冲突及流离失所压力。</div><div class="source">2024/25年脆弱国家指数</div></div>
+      <div class="card orange"><div class="name">乍得 <span class="level">橙色</span></div><div class="drivers">跻身脆弱国家指数前10位;正在接收来自苏丹的大量难民流入。</div><div class="source">2024/25年脆弱国家指数</div></div>
+      <div class="card orange"><div class="name">马里 <span class="level">橙色</span></div><div class="drivers">跻身脆弱国家指数前15位;圣战主义叛乱,政变后的治理紧张局势。</div><div class="source">2024/25年脆弱国家指数</div></div>
+      <div class="card orange"><div class="name">尼日尔与布基纳法索 <span class="level">橙色</span></div><div class="drivers">萨赫勒叛乱带;政变后的治理不稳定。</div><div class="source">ACLED 冲突观察名单</div></div>
+      <div class="card orange"><div class="name">尼日利亚 <span class="level">橙色</span></div><div class="drivers">在2026年饥荒热点中属于"最高关注"等级;东北部存在博科圣地/伊斯兰国西非省的叛乱活动。</div><div class="source">2026年饥荒热点,2024/25年脆弱国家指数</div></div>
+    </div>
+  </div>
+
+  <div class="region">
+    <h2>中东</h2>
+    <div class="grid">
+      <div class="card red"><div class="name">也门 <span class="level">红色</span></div><div class="drivers">跻身脆弱国家指数前5位;在饥荒热点中属于最高关注等级;旷日持久的内战。</div><div class="source">2024/25年脆弱国家指数,2026年饥荒热点</div></div>
+      <div class="card red"><div class="name">叙利亚 <span class="level">红色</span></div><div class="drivers">跻身脆弱国家指数前5位;冲突后重建的脆弱性,流离失所问题。</div><div class="source">2024/25年脆弱国家指数</div></div>
+      <div class="card red"><div class="name">加沙/巴勒斯坦 <span class="level">红色</span></div><div class="drivers">2025年确认发生饥荒(IPC第5阶段);跻身脆弱国家指数前15位;冲突活跃。</div><div class="source">IPC 饥荒事实,2024/25年脆弱国家指数</div></div>
+      <div class="card orange"><div class="name">黎巴嫩 <span class="level">橙色</span></div><div class="drivers">经济崩溃,政治瘫痪,受区域冲突外溢影响。</div><div class="source">ACLED 区域监测</div></div>
+      <div class="card orange"><div class="name">伊拉克 <span class="level">橙色</span></div><div class="drivers">脆弱国家指数中的中等脆弱程度;残余的叛乱活动,治理紧张局势。</div><div class="source">2024/25年脆弱国家指数</div></div>
+    </div>
+  </div>
+
+  <div class="region">
+    <h2>亚洲与中亚</h2>
+    <div class="grid">
+      <div class="card red"><div class="name">阿富汗 <span class="level">红色</span></div><div class="drivers">跻身脆弱国家指数前10位;在饥荒热点中属于"极高关注"等级;在制裁/孤立之下经济崩溃。</div><div class="source">2024/25年脆弱国家指数,2026年饥荒热点</div></div>
+      <div class="card red"><div class="name">缅甸 <span class="level">红色</span></div><div class="drivers">跻身脆弱国家指数前15位;自2021年政变以来持续进行的内战,多条战线同时活跃。</div><div class="source">2024/25年脆弱国家指数,ACLED</div></div>
+      <div class="card orange"><div class="name">巴基斯坦 <span class="level">橙色</span></div><div class="drivers">中等脆弱程度;经济紧张,周期性的武装分子暴力活动。</div><div class="source">2024/25年脆弱国家指数</div></div>
+      <div class="card yellow"><div class="name">孟加拉国 <span class="level">黄色</span></div><div class="drivers">自2024年以来的政治过渡波动性;局部动荡。</div><div class="source">ACLED 区域监测</div></div>
+    </div>
+  </div>
+
+  <div class="region">
+    <h2>美洲</h2>
+    <div class="grid">
+      <div class="card red"><div class="name">海地 <span class="level">红色</span></div><div class="drivers">跻身脆弱国家指数前10位;帮派控制着首都的大部分地区;在饥荒热点中属于极高关注等级。</div><div class="source">2024/25年脆弱国家指数,2026年饥荒热点</div></div>
+      <div class="card orange"><div class="name">委内瑞拉 <span class="level">橙色</span></div><div class="drivers">旷日持久的经济/政治危机;大规模的持续外流移民。</div><div class="source">脆弱国家指数趋势数据</div></div>
+      <div class="card orange"><div class="name">洪都拉斯与萨尔瓦多 <span class="level">橙色</span></div><div class="drivers">历史上犯罪暴力负担沉重;萨尔瓦多的紧急状态政策正在重塑整体局面。</div><div class="source">全球有组织犯罪指数</div></div>
+      <div class="card orange"><div class="name">厄瓜多尔 <span class="level">橙色</span></div><div class="drivers">近期有组织犯罪暴力与凶杀率大幅上升。</div><div class="source">全球有组织犯罪指数</div></div>
+      <div class="card yellow"><div class="name">哥伦比亚 <span class="level">黄色</span></div><div class="drivers">和平进程之后武装团体残余活动;局部性热点。</div><div class="source">ACLED 区域监测</div></div>
+    </div>
+  </div>
+
+  <div class="region">
+    <h2>中非</h2>
+    <div class="grid">
+      <div class="card red"><div class="name">刚果民主共和国 <span class="level">红色</span></div><div class="drivers">跻身脆弱国家指数前5位;东部发生M23攻势与大规模流离失所;在饥荒热点中属于极高关注等级。</div><div class="source">2024/25年脆弱国家指数,2026年饥荒热点</div></div>
+      <div class="card red"><div class="name">中非共和国 <span class="level">红色</span></div><div class="drivers">跻身脆弱国家指数前10位;长期存在的武装团体分裂局面。</div><div class="source">2024/25年脆弱国家指数</div></div>
+      <div class="card orange"><div class="name">利比亚 <span class="level">橙色</span></div><div class="drivers">跻身脆弱国家指数前20位;治理分裂,民兵武装周期性冲突。</div><div class="source">2024/25年脆弱国家指数</div></div>
+      <div class="card orange"><div class="name">莫桑比克 <span class="level">橙色</span></div><div class="drivers">属于过去十年脆弱国家指数中恶化最快的趋势之一;卡布德尔加杜省存在叛乱活动。</div><div class="source">脆弱国家指数趋势数据</div></div>
+    </div>
+  </div>
+
+  <div class="region">
+    <h2>不平等与有组织犯罪的集中地(跨领域)</h2>
+    <div class="grid">
+      <div class="card orange"><div class="name">南非 <span class="level">橙色</span></div><div class="drivers">跻身全球基尼系数最高的国家之列;有组织犯罪指数评分较高。</div><div class="source">世界银行基尼数据,全球有组织犯罪指数</div></div>
+      <div class="card yellow"><div class="name">巴西 <span class="level">黄色</span></div><div class="drivers">不平等程度高,城市犯罪暴力负担较重,但不具备上述那种严重的国家脆弱性指标。</div><div class="source">世界银行基尼数据,全球有组织犯罪指数</div></div>
+      <div class="card yellow"><div class="name">墨西哥 <span class="level">黄色</span></div><div class="drivers">持续存在的与贩毒集团相关的暴力,集中在特定区域而非全国范围。</div><div class="source">全球有组织犯罪指数</div></div>
+    </div>
+  </div>
+
+  <div class="foot">
+    <p><strong>本页面不是什么:</strong>它不是一个实时数据来源。对于任何时效性或与决策相关的数据,请对照地图子页面上的实时来源——脆弱国家指数热力图、ACLED、FEWS NET/IPC、全球和平指数、全球有组织犯罪指数。</p>
+    <p><strong>覆盖空白:</strong>本快照偏重于在至少一项主要指数中排名靠前的国家;许多存在中等程度不稳定、但未登上头条的国家未被列入其中,不应因遗漏而被解读为"稳定"。</p>
+    <p><strong>关于存在争议的案例:</strong>此处的条目(例如加沙/巴勒斯坦、缅甸、埃塞俄比亚)反映的是所引用指数的报告内容,而非某种政治立场——如果某项分类将用于任何具有实际后果的用途,请查阅一手来源。</p>
+  </div>
+  <div class="foot">
+    <p>依据 <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener">CC BY 4.0</a> 许可协议发布——请参阅项目文件夹中的 LICENSE-zh.html 了解其涵盖范围。底层的第三方数据(各类指数、世卫组织/联合国报告等)保留其自身的许可协议/版权。</p>
+  </div>
+
+</div>
+</body>
+</html>
